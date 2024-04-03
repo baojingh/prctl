@@ -30,7 +30,7 @@ build:prehandle
 	go build -ldflags="-s -w \
 			-X 'github.com/baojingh/prctl/cmd.buildVersion=$(VERSION)' \
 			-X 'github.com/baojingh/prctl/cmd.buildTime=$(CURRENT_TIME)'" \
-			-x -v -o build/prctl
+			-v -o build/prctl
 
 tidy:
 	go mod tidy

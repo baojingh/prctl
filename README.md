@@ -6,7 +6,7 @@ A tool to manage components in private repo, currently for JFrog
 
 
 ```bash
-prctl login --url xxxx --type debian --username xxx --password xxx
+prctl login --url xxxx --username xxx --password xxx
 prctl logout 
 
 prctl config list
