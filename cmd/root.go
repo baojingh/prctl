@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/baojingh/prctl/cmd/debian"
 	"github.com/spf13/cobra"
 )
 
@@ -24,10 +25,5 @@ var RootCmd = &cobra.Command{
 }
 
 func init() {
-	// PersistentFlags means the params could be
-	// used in current cmd and its sub cmd.
-	RootCmd.PersistentFlags().String("ip", "", "server ip address")
-	RootCmd.PersistentFlags().String("port", "", "server port")
-	RootCmd.MarkFlagRequired("ip")
-	RootCmd.MarkFlagRequired("port")
+	RootCmd.AddCommand(debian.LoginCmd)
 }
