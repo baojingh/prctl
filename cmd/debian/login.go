@@ -2,12 +2,13 @@ package debian
 
 import (
 	"encoding/base64"
-	"fmt"
+	"encoding/json"
 	"os"
 	"os/user"
 	"path/filepath"
 
 	"github.com/baojingh/prctl/logger"
+	"github.com/baojingh/prctl/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -34,35 +35,62 @@ func init() {
 	LoginCmd.Flags().String("password", "", "Password for login")
 }
 
+type CredentialInfo struct {
+	Url      string `json: url`
+	Username string `json: username`
+	Password string `json: password`
+}
+
 func login(url string, username string, password string) {
-	log.Infof("This is a login test, #%s#%s#%s", url, username, password)
+	cred := CredentialInfo{
+		Url:      url,
+		Username: username,
+		Password: password,
+	}
+	WriteCred(cred)
+}
+
+func ReadCred(credPath string) CredentialInfo {
+	var credInfo CredentialInfo
+	decodeCred, err := base64.StdEncoding.DecodeString(credPath)
+	if err != nil {
+		log.Fatalf("Fail to decode, %s", err)
+		return credInfo
+	}
+	err = json.Unmarshal(decodeCred, &credInfo)
+	if err != nil {
+		log.Fatalf("Fail to unmarshal from decode data, %s", err)
+		return credInfo
+	}
+	return credInfo
+}
+
+func WriteCred(cred CredentialInfo) error {
 	currUser, err := user.Current()
 	if err != nil {
 		log.Fatalf("cannot get current user default path, %s", err)
-		return
+		return err
 	}
 	userPath := currUser.HomeDir
 	hiddenPath := filepath.Join(userPath, ".prctl")
-	info, err := os.Stat(hiddenPath)
-	if !os.IsNotExist(err) {
-		err = os.Mkdir(hiddenPath, 0700)
-		if err != nil {
-			log.Fatalf("Cannot create hidden path, %s", err)
-			return
-		}
-	} else {
-		log.Info(info.IsDir())
+	err = utils.CreateDirIfNotExist(hiddenPath, 0700)
+	if err != nil {
+		log.Fatalf("Cannot create hidden path %s, %s", hiddenPath, err)
+		return err
 	}
-
-	cred := fmt.Sprintf("%s:%s", username, password)
-	encodeCred := base64.StdEncoding.EncodeToString([]byte(cred))
+	credByte, err := json.Marshal(cred)
+	if err != nil {
+		log.Fatalf("Cannot marshal struct to byte array, %s", err)
+		return err
+	}
+	encodeCred := base64.StdEncoding.EncodeToString(credByte)
+	// WriteFile create it if not exist
 	credPath := filepath.Join(hiddenPath, ".config")
 	err = os.WriteFile(credPath, []byte(encodeCred), 0600)
-
 	if err != nil {
-		log.Fatalf("Cannot create credential file, %s", err)
-		return
+		log.Fatalf("Cannot create credential path %s, %s", credPath, err)
+		return err
 	}
-
 	log.Infof("Create config info success, %s", credPath)
+	return nil
 }
