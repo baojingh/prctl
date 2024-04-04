@@ -54,12 +54,12 @@ func ReadCred(credPath string) CredentialInfo {
 	var credInfo CredentialInfo
 	decodeCred, err := base64.StdEncoding.DecodeString(credPath)
 	if err != nil {
-		log.Fatalf("Fail to decode, %s", err)
+		log.Errorf("Fail to decode, %s", err)
 		return credInfo
 	}
 	err = json.Unmarshal(decodeCred, &credInfo)
 	if err != nil {
-		log.Fatalf("Fail to unmarshal from decode data, %s", err)
+		log.Errorf("Fail to unmarshal from decode data, %s", err)
 		return credInfo
 	}
 	return credInfo
@@ -68,19 +68,19 @@ func ReadCred(credPath string) CredentialInfo {
 func WriteCred(cred CredentialInfo) error {
 	currUser, err := user.Current()
 	if err != nil {
-		log.Fatalf("cannot get current user default path, %s", err)
+		log.Errorf("cannot get current user default path, %s", err)
 		return err
 	}
 	userPath := currUser.HomeDir
 	hiddenPath := filepath.Join(userPath, ".prctl")
 	err = utils.CreateDirIfNotExist(hiddenPath, 0700)
 	if err != nil {
-		log.Fatalf("Cannot create hidden path %s, %s", hiddenPath, err)
+		log.Errorf("Cannot create hidden path %s, %s", hiddenPath, err)
 		return err
 	}
 	credByte, err := json.Marshal(cred)
 	if err != nil {
-		log.Fatalf("Cannot marshal struct to byte array, %s", err)
+		log.Errorf("Cannot marshal struct to byte array, %s", err)
 		return err
 	}
 	encodeCred := base64.StdEncoding.EncodeToString(credByte)
@@ -88,7 +88,7 @@ func WriteCred(cred CredentialInfo) error {
 	credPath := filepath.Join(hiddenPath, ".config")
 	err = os.WriteFile(credPath, []byte(encodeCred), 0600)
 	if err != nil {
-		log.Fatalf("Cannot create credential path %s, %s", credPath, err)
+		log.Errorf("Cannot create credential path %s, %s", credPath, err)
 		return err
 	}
 	log.Infof("Create config info success, %s", credPath)
