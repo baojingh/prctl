@@ -36,9 +36,9 @@ func init() {
 }
 
 type CredentialInfo struct {
-	Url      string `json: url`
-	Username string `json: username`
-	Password string `json: password`
+	Url      string `json:"url"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func login(url string, username string, password string) {
