@@ -6,11 +6,10 @@ GO_VERSION = $(go version)
 all: clean build
 
 push:
-	git remote set-url origin  git@github.com:baojingh/prctl.git
 	git pull
-	git add .
-	git commit -m "update"
-	git push origin main
+	git add . || true
+	git commit -m "update" || true
+	git push origin main || true
 
 prehandle:clean
 	sudo rm -rf /var/log/prctl/*
