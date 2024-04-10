@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/baojingh/prctl/cmd"
-	logger "github.com/baojingh/prctl/logger"
+	"github.com/baojingh/prctl/internal/logger"
 )
 
 var log = logger.New()

@@ -1,7 +1,7 @@
 package debian
 
 import (
-	"github.com/baojingh/prctl/utils"
+	"github.com/baojingh/prctl/internal/utils/files"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var LogoutCmd = &cobra.Command{
 }
 
 func logout(path string) {
-	success := utils.RemoveFileIfExist(path)
+	success := files.RemoveFileIfExist(path)
 	if success {
 		log.Infof("Remove cred file success, %s", path)
 	} else {

@@ -7,8 +7,8 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/baojingh/prctl/logger"
-	"github.com/baojingh/prctl/utils"
+	"github.com/baojingh/prctl/internal/logger"
+	"github.com/baojingh/prctl/internal/utils/files"
 	"github.com/spf13/cobra"
 )
 
@@ -75,7 +75,7 @@ func WriteCred(cred CredentialInfo) error {
 	}
 	userPath := currUser.HomeDir
 	hiddenPath := filepath.Join(userPath, ".prctl")
-	err = utils.CreateDirIfNotExist(hiddenPath, 0700)
+	err = files.CreateDirIfNotExist(hiddenPath, 0700)
 	if err != nil {
 		log.Errorf("Cannot create hidden path %s, %s", hiddenPath, err)
 		return err
