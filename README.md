@@ -19,3 +19,9 @@ prctl logout
 ```bash
 prctl download --input components.txt --output ./outputs 
 ```
+
+```bash
+apt-get install --no-install-recommends -y --download-only cron
+
+# apt-get download  cron
+```

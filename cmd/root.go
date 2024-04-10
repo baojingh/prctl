@@ -27,4 +27,5 @@ var RootCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(debian.LoginCmd)
 	RootCmd.AddCommand(debian.LogoutCmd)
+	RootCmd.AddCommand(debian.DownloadCmd)
 }

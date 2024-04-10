@@ -38,3 +38,7 @@ tidy:
 clean:
 	rm -rf build
 	sudo rm -rf /usr/local/bin/prctl
+
+deb-dl:
+	sudo prctl  download  -i examples/deb.txt  -o /data/tmp/deb-pool
+

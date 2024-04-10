@@ -28,8 +28,8 @@ var LoginCmd = &cobra.Command{
 
 func init() {
 	LoginCmd.Flags().String("url", "", "URL of the repository")
-	LoginCmd.Flags().String("username", "", "Username for login")
-	LoginCmd.Flags().String("password", "", "Password for login")
+	LoginCmd.Flags().StringP("username", "u", "", "Username for login")
+	LoginCmd.Flags().StringP("password", "p", "", "Password for login")
 	// MarkFlagRequired is put in first place, then it will not take effect.
 	// MarkFlagRequired must be in the second place
 	LoginCmd.MarkFlagRequired("url")
