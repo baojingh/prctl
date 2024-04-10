@@ -15,14 +15,14 @@ push:
 prehandle:clean
 	sudo rm -rf /var/log/prctl/*
 	sudo mkdir -p /var/log/prctl
-	sudo chown -R ubuntu:ubuntu /var/log/prctl
+	sudo chown -R ${USER}:${USER} /var/log/prctl
 
 run:prehandle
 	go run main.go
 
 install:build
 	sudo cp build/prctl /usr/local/bin/prctl
-	sudo chown -R ubuntu:ubuntu /usr/local/bin/prctl
+	sudo chown -R ${USER}:${USER} /usr/local/bin/prctl
 
 build:prehandle
 	mkdir build
