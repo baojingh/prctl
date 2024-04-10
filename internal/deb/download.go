@@ -50,7 +50,7 @@ func doDownload(name string) (string, error) {
 	// param := fmt.Sprintf("install --no-install-recommends -y --download-only ")
 	// log.Info(param)
 	// out, err := shell.DoShellCmd("apt-get", param)
-	params := []string{"install", " --no-install-recommends", "-y", "--download-only", name}
+	params := []string{"install", "--no-install-recommends", "-y", "--download-only", name}
 	out, err := shell.DoShellCmd("apt-get", params...)
 	// out, err := shell.DoShellCmd("apt-get", "install --no-install-recommends -y --download-only", "gosu")
 	log.Infof("out: %s, err: %s", out, err)
