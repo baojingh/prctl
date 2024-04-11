@@ -53,7 +53,7 @@ func doDownload(name string) (string, error) {
 	params := []string{"install", "--no-install-recommends", "-y", "--download-only", name}
 	out, err := shell.DoShellCmd("apt-get", params...)
 	// out, err := shell.DoShellCmd("apt-get", "install --no-install-recommends -y --download-only", "gosu")
-	log.Infof("out: %s, err: %s", out, err)
+	// log.Infof("out: %s, err: %s", out, err)
 
 	return out, err
 
