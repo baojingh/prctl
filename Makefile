@@ -39,6 +39,10 @@ clean:
 	rm -rf build
 	sudo rm -rf /usr/local/bin/prctl
 
-deb-dl:
+deb-down:
+	sudo rm -rf /var/cache/apt/archives/*.deb
 	sudo prctl  download  -i examples/deb.txt  -o /data/tmp/deb-pool
 
+
+deb-ls:
+	ls -lh /var/cache/apt/archives/

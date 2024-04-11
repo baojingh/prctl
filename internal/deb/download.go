@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/baojingh/prctl/internal/logger"
 	"github.com/baojingh/prctl/internal/utils/shell"
@@ -20,7 +21,6 @@ func prepareDebEnv() {
 	if err != nil {
 		return
 	}
-
 }
 
 // input: /xx/xx/xx/ss.txt, check is it exists
@@ -34,44 +34,31 @@ func DownloadDeb(input string, output string) {
 		return
 	}
 	defer file.Close()
+
+	var buffer strings.Builder
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line := scanner.Text()
-		doDownload(line)
+		name := scanner.Text()
+		buffer.WriteString(name)
+		buffer.WriteString(" ")
 	}
 	if err := scanner.Err(); err != nil {
 		return
 	}
+	res := strings.TrimSpace(buffer.String())
+	doDownload(res)
+	log.Info("Deb components are downloaded success.")
 }
 
-func doDownload(name string) (string, error) {
-	// log.Infof("hello, %s", name)
-	// return "", nil
-	// param := fmt.Sprintf("install --no-install-recommends -y --download-only ")
-	// log.Info(param)
-	// out, err := shell.DoShellCmd("apt-get", param)
-	params := []string{"install", "--no-install-recommends", "-y", "--download-only", name}
+func doDownload(nameList string) {
+	// component name list must be seperated and then composed by append.
+	params := []string{"install", "--no-install-recommends", "-y", "--download-only"}
+	params = append(params, strings.Fields(nameList)...)
+
 	out, err := shell.DoShellCmd("apt-get", params...)
-	// out, err := shell.DoShellCmd("apt-get", "install --no-install-recommends -y --download-only", "gosu")
-	// log.Infof("out: %s, err: %s", out, err)
-
-	return out, err
-
-	// defer file.Close()
-	// scanner := bufio.NewScanner(file)
-	//
-	//	for scanner.Scan() {
-	//		line := scanner.Text()
-	//		fields := strings.Split(line, "=")
-	//		osMap[]
-	//		if len(fields) >= 2 && fields[0] == "ID" {
-	//			dis := strings.TrimSpace(fields[1])
-	//			return dis, nil
-	//		}
-	//	}
-	//
-	//	if scanner.Err(); err != nil {
-	//		return "", err
-	//	}
-
+	if err != nil {
+		log.Errorf("Failed to download %s, err: %s, out: %s", nameList, err, out)
+		return
+	}
+	log.Infof("Download %s success.", nameList)
 }

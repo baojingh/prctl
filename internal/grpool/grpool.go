@@ -17,7 +17,7 @@ func init() {
 		var err error
 		pool, err = ants.NewPool(5)
 		if err != nil {
-			log.Error("Failed to init Ants Pool")
+			log.Error("Failed to init ants Pool")
 			return
 		}
 		log.Info("Init ants pool success")
