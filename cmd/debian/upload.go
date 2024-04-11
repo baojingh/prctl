@@ -1,6 +1,7 @@
 package debian
 
 import (
+	"github.com/baojingh/prctl/internal/deb"
 	"github.com/spf13/cobra"
 )
 
@@ -12,6 +13,18 @@ var UploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "upload debian components into repo",
 	Run: func(cmd *cobra.Command, args []string) {
+		distribution, _ := cmd.Flags().GetString("distribution")
+		component, _ := cmd.Flags().GetString("component")
+		input, _ := cmd.Flags().GetString("input")
+		architecture, _ := cmd.Flags().GetString("architecture")
+
+		meta := deb.DebComponentMeta{
+			Distribution: distribution,
+			Component:    component,
+			Architech:    architecture,
+		}
+
+		deb.UploadDeb(meta, input)
 		log.Info("upload")
 	},
 }
