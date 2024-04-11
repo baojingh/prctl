@@ -28,4 +28,5 @@ func init() {
 	RootCmd.AddCommand(debian.LoginCmd)
 	RootCmd.AddCommand(debian.LogoutCmd)
 	RootCmd.AddCommand(debian.DownloadCmd)
+	RootCmd.AddCommand(debian.UploadCmd)
 }

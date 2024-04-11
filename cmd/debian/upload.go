@@ -15,3 +15,14 @@ var UploadCmd = &cobra.Command{
 		log.Info("upload")
 	},
 }
+
+func init() {
+	UploadCmd.Flags().StringP("distribution", "dis", "", "distribution")
+	UploadCmd.Flags().StringP("component", "com", "", "component")
+	UploadCmd.Flags().StringP("architecture", "arch", "", "architecture")
+	UploadCmd.Flags().StringP("input", "i", "", "architecture")
+	UploadCmd.MarkFlagRequired("distribution")
+	UploadCmd.MarkFlagRequired("component")
+	UploadCmd.MarkFlagRequired("architecture")
+	UploadCmd.MarkFlagRequired("input")
+}
