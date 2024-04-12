@@ -42,10 +42,12 @@ clean:
 deb-login:
 	prctl login --url https://anc.com --username bob --password password
 
+deb-logout:
+	echo "TODO"
+
 deb-down:
 	sudo rm -rf /var/cache/apt/archives/*.deb
 	sudo prctl  download  -i examples/deb.txt  -o /data/tmp/deb-pool
-
 
 deb-ls:
 	ls -lh /var/cache/apt/archives/
@@ -53,3 +55,6 @@ deb-ls:
 deb-upload:
 	prctl  upload --architecture amd64 --component main --distribution bookworm \
 				  --input /data/code/goproject/prctl/examples/deb-pool/
+
+deb-del:
+	echo "TODO"
