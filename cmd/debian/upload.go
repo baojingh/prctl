@@ -28,9 +28,9 @@ var UploadCmd = &cobra.Command{
 }
 
 func init() {
-	UploadCmd.Flags().StringP("distribution", "dis", "", "distribution")
-	UploadCmd.Flags().StringP("component", "com", "", "component")
-	UploadCmd.Flags().StringP("architecture", "arch", "", "architecture")
+	UploadCmd.Flags().String("distribution", "", "distribution")
+	UploadCmd.Flags().String("component", "", "component")
+	UploadCmd.Flags().String("architecture", "", "architecture")
 	UploadCmd.Flags().StringP("input", "i", "", "architecture")
 	UploadCmd.MarkFlagRequired("distribution")
 	UploadCmd.MarkFlagRequired("component")

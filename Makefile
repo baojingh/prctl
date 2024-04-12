@@ -39,6 +39,9 @@ clean:
 	rm -rf build
 	sudo rm -rf /usr/local/bin/prctl
 
+deb-login:
+	prctl login --url https://anc.com --username bob --password password
+
 deb-down:
 	sudo rm -rf /var/cache/apt/archives/*.deb
 	sudo prctl  download  -i examples/deb.txt  -o /data/tmp/deb-pool
@@ -46,3 +49,7 @@ deb-down:
 
 deb-ls:
 	ls -lh /var/cache/apt/archives/
+
+deb-upload:
+	prctl  upload --architecture amd64 --component main --distribution bookworm \
+				  --input /data/code/goproject/prctl/examples/deb-pool/
