@@ -3,6 +3,7 @@ package files
 import (
 	"errors"
 	"os"
+	"path/filepath"
 )
 
 func CreateDirIfNotExist(path string, perm os.FileMode) error {
@@ -43,4 +44,26 @@ func RemoveFileIfExist(path string) bool {
 		return true
 	}
 	return false
+}
+
+func ListFilesInDir(path string) ([]string, error) {
+	entries, err := os.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+	var fileList []string
+	for _, e := range entries {
+		n := e.Name()
+		fileList = append(fileList, n)
+	}
+	return fileList, nil
+}
+
+func ComposeAbsPath(path string, fileList []string) []string {
+	var absPathList []string
+	for _, e := range fileList {
+		absPath := filepath.Join(path, e)
+		absPathList = append(absPathList, absPath)
+	}
+	return absPathList
 }

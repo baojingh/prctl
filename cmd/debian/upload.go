@@ -23,9 +23,7 @@ var UploadCmd = &cobra.Command{
 			Component:    component,
 			Architech:    architecture,
 		}
-
 		deb.UploadDeb(meta, input)
-		log.Info("upload")
 	},
 }
 

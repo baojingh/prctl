@@ -20,3 +20,15 @@ func TestCreateFileIfNotExist(t *testing.T) {
 		fmt.Printf("Failed to create file, %s", err)
 	}
 }
+
+func TestListFilesInDir(t *testing.T) {
+	res, _ := ListFilesInDir("./")
+	fmt.Println(res)
+}
+
+func TestComposeAbsPath(t *testing.T) {
+	list := []string{"c", "d", "e"}
+
+	res := ComposeAbsPath("/hello/world/", list)
+	fmt.Println(res)
+}

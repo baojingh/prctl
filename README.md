@@ -25,3 +25,6 @@ apt-get install --no-install-recommends -y --download-only cron
 
 # apt-get download  cron
 ```
+
+# REF
+https://stackoverflow.com/questions/56133485/uploading-multiple-files-in-parallel-to-amazon-s3-with-goroutines-channels
