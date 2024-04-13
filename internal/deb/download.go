@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/baojingh/prctl/internal/logger"
-	"github.com/baojingh/prctl/internal/utils/shell"
+	"github.com/baojingh/prctl/pkg/shell"
 )
 
 var log = logger.New()
