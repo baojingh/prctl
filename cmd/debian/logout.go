@@ -1,7 +1,7 @@
 package debian
 
 import (
-	"github.com/baojingh/prctl/internal/utils/files"
+	"github.com/baojingh/prctl/pkg/files"
 	"github.com/spf13/cobra"
 )
 
