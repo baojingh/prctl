@@ -36,7 +36,7 @@ deb-logout:
 
 deb-down:
 	sudo rm -rf /var/cache/apt/archives/*.deb
-	sudo prctl  download  -i examples/deb.txt  -o /data/tmp/deb-pool
+	sudo prctl  download  -i examples/deb.txt  -o pool
 
 deb-ls:
 	ls -lh /var/cache/apt/archives/

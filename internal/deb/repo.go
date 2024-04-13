@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"os"
+	"os/user"
 	"path/filepath"
 
 	"github.com/baojingh/prctl/pkg/files"
@@ -35,9 +36,14 @@ func ReadCred(credPath string) CredentialInfo {
 }
 
 func WriteCred(cred CredentialInfo) error {
-	userPath := CurrentUserDir()
+	currUser, err := user.Current()
+	if err != nil {
+		log.Errorf("cannot get current user default path, %s", err)
+		return err
+	}
+	userPath := currUser.HomeDir
 	hiddenPath := filepath.Join(userPath, ".prctl")
-	err := files.CreateDirIfNotExist(hiddenPath, 0700)
+	err = files.CreateDirIfNotExist(hiddenPath, 0700)
 	if err != nil {
 		log.Errorf("Cannot create hidden path %s, %s", hiddenPath, err)
 		return err

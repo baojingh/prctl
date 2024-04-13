@@ -6,9 +6,9 @@ import (
 )
 
 func TestGetOs(t *testing.T) {
-	release, version, err := GetOs()
+	info, err := GetOs()
 	if err != nil {
 		fmt.Println("err", err)
 	}
-	fmt.Println(release, version)
+	fmt.Println(info.Distribution, info.Version)
 }

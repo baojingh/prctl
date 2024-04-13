@@ -1,5 +1,11 @@
 package os
 
+import (
+	"bufio"
+	"os"
+	"strings"
+)
+
 /*
 $ cat /etc/os-release
 PRETTY_NAME="Ubuntu 22.04 LTS"
@@ -16,33 +22,37 @@ PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-poli
 UBUNTU_CODENAME=jammy
 */
 
-func GetOs() (string, string, error) {
-	return "ubuntu", "jammy", nil
-	// // default path in linux
-	// path := "/etc/os-release"
-	// file, err := os.Open(path)
-	// if err != nil {
-	// 	return "", err
-	// }
+type OSInfo struct {
+	Distribution string
+	Version      string
+}
 
-	// osMap := make(map[string]string)
+func GetOs() (OSInfo, error) {
+	osInfo := OSInfo{}
 
-	// defer file.Close()
-	// scanner := bufio.NewScanner(file)
-	//
-	//	for scanner.Scan() {
-	//		line := scanner.Text()
-	//		fields := strings.Split(line, "=")
-	//		osMap[]
-	//		if len(fields) >= 2 && fields[0] == "ID" {
-	//			dis := strings.TrimSpace(fields[1])
-	//			return dis, nil
-	//		}
-	//	}
-	//
-	//	if scanner.Err(); err != nil {
-	//		return "", err
-	//	}
-	//
-	// return "", fmt.Errorf("Cannot find Linux distribution")
+	// default path in linux
+	path := "/etc/os-release"
+	file, err := os.Open(path)
+	if err != nil {
+		return osInfo, err
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		fields := strings.Split(line, "=")
+		if len(fields) >= 2 && fields[0] == "ID" {
+			dis := strings.TrimSpace(fields[1])
+			osInfo.Distribution = dis
+		}
+		if len(fields) >= 2 && fields[0] == "VERSION_CODENAME" {
+			version := strings.TrimSpace(fields[1])
+			osInfo.Version = version
+		}
+	}
+	if scanner.Err(); err != nil {
+		return osInfo, err
+	}
+	return osInfo, nil
 }

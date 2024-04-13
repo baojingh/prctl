@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/baojingh/prctl/internal/logger"
+	"github.com/baojingh/prctl/pkg/files"
 	"github.com/baojingh/prctl/pkg/shell"
 )
 
@@ -47,6 +48,7 @@ func DownloadDeb(input string, output string) {
 	}
 	res := strings.TrimSpace(buffer.String())
 	doDownload(res)
+	files.MoveFilesBatch("/var/cache/apt/archives/", output, ".deb")
 	log.Info("Deb components are downloaded success.")
 }
 

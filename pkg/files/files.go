@@ -2,8 +2,10 @@ package files
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func CreateDirIfNotExist(path string, perm os.FileMode) error {
@@ -38,6 +40,14 @@ func IsFileExist(path string) bool {
 	return false
 }
 
+func IsDirExist(path string) bool {
+	fi, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return fi.IsDir()
+}
+
 func RemoveFileIfExist(path string) bool {
 	if IsFileExist(path) {
 		os.Remove(path)
@@ -66,4 +76,26 @@ func ComposeAbsPath(path string, fileList []string) []string {
 		absPathList = append(absPathList, absPath)
 	}
 	return absPathList
+}
+
+func MoveFilesBatch(src string, dst string, pattern string) error {
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+	if !IsDirExist(dst) {
+		// Create the directory if not exist
+		CreateDirIfNotExist(dst, 0600)
+	}
+	for _, e := range entries {
+		name := e.Name()
+		if strings.HasSuffix(name, pattern) {
+			srcFile := filepath.Join(src, name)
+			dstFile := filepath.Join(dst, name)
+			if err := os.Rename(srcFile, dstFile); err != nil {
+				return fmt.Errorf("failed to move file %s to %s: %w", srcFile, dstFile, err)
+			}
+		}
+	}
+	return nil
 }

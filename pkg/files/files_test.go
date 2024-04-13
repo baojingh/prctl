@@ -32,3 +32,9 @@ func TestComposeAbsPath(t *testing.T) {
 	res := ComposeAbsPath("/hello/world/", list)
 	fmt.Println(res)
 }
+
+func TestMoveFilesBatch(t *testing.T) {
+	src := "/data/code/goproject/prctl/examples/src-deb"
+	dst := "/data/code/goproject/prctl/examples/dst-deb"
+	MoveFilesBatch(src, dst, ".deb")
+}
