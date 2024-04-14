@@ -14,11 +14,14 @@ type DeleteParam struct {
 
 func DeleteDeb(param DeleteParam) {
 	if param.All {
-		deleteAll()
-	} else if param.Version == "" {
-		deleteByName()
-	} else if param.Name != "" {
-		deleteByVersion()
+		log.Infof("delete all, %s", param)
+		// deleteAll()
+	} else if param.Name != "" && param.Version == "" {
+		log.Infof("delete component, %s", param)
+		// deleteByName()
+	} else if param.Name != "" && param.Version != "" {
+		log.Infof("delete version, %s", param)
+		// deleteByVersion()
 	}
 }
 
