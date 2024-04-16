@@ -33,6 +33,7 @@ func deleteByVersion() {
 
 }
 
+//go:generate
 func deleteAll() {
 	// 替换为你的资源URL
 	credPath := "/root/.prctl/.config"
