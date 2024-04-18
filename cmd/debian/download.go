@@ -13,7 +13,10 @@ var DownloadCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		input, _ := cmd.Flags().GetString("input")
 		output, _ := cmd.Flags().GetString("output")
-		deb.DownloadDeb(input, output)
+		cli := deb.NewClientFromConfig()
+		if cli != nil {
+			cli.Download(input, output)
+		}
 	},
 }
 

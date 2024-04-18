@@ -17,13 +17,15 @@ var UploadCmd = &cobra.Command{
 		component, _ := cmd.Flags().GetString("component")
 		input, _ := cmd.Flags().GetString("input")
 		architecture, _ := cmd.Flags().GetString("architecture")
-
 		meta := deb.DebComponentMeta{
 			Distribution: distribution,
 			Component:    component,
 			Architech:    architecture,
 		}
-		deb.UploadDeb(meta, input)
+		cli := deb.NewClientFromConfig()
+		if cli != nil {
+			cli.Upload(meta, input)
+		}
 	},
 }
 

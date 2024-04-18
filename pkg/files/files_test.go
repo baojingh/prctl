@@ -38,3 +38,8 @@ func TestMoveFilesBatch(t *testing.T) {
 	dst := "/data/code/goproject/prctl/examples/dst-deb"
 	MoveFilesBatch(src, dst, ".deb")
 }
+
+func TestRemoveFileIfExist(t *testing.T) {
+	res := RemoveFileIfExist("/home/secur1ty/.prctl/ee")
+	fmt.Println(res)
+}

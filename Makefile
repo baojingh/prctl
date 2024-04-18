@@ -17,32 +17,36 @@ install: clean
 	go build -ldflags="-s -w \
 			-X 'github.com/baojingh/prctl/cmd.buildVersion=$(VERSION)' \
 			-X 'github.com/baojingh/prctl/cmd.buildTime=$(CURRENT_TIME)'" \
-			-v -o build/prctl
-	sudo cp build/prctl /usr/local/bin/prctl
-	sudo chown -R ${USER}:${USER} /usr/local/bin/prctl			
+			-v -o build/prctl		
 
 clean:
 	rm -rf build
-	sudo rm -rf /usr/local/bin/prctl
 
 tidy:
 	go mod tidy
 
 deb-login:
-	prctl login --url https://anc.com --username bob --password password
+	./build/prctl login --url https://anc.com --repo myrepo --username bob --password password
+	ls -lh ~/.prctl
+	cat ~/.prctl/config
+	cat ~/.prctl/config | base64 -d
 
 deb-logout:
-	echo "TODO"
+	./build/prctl logout
+	ls -lh ~/.prctl
 
 deb-down:
-	sudo rm -rf /var/cache/apt/archives/*.deb
-	sudo prctl  download  -i examples/deb.txt  -o pool
+	sudo rm -rf examples/deb-pool
+	go run main.go  download  -i examples/deb.txt  -o examples/deb-pool
+	ls -lh examples/deb-pool
+
+	# ./build/prctl  download  -i examples/deb.txt  -o examples/deb-pool
 
 deb-ls:
 	ls -lh /var/cache/apt/archives/
 
 deb-upload:
-	prctl  upload --architecture amd64 --component main --distribution bookworm \
+	./build/prctl  upload --architecture amd64 --component main --distribution bookworm \
 				  --input /data/code/goproject/prctl/examples/deb-pool/
 
 deb-del:

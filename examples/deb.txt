@@ -1,8 +1,4 @@
-logrotate
 cron
 gosu
 jq
 curl
-python3-pip
-zip
-unzip

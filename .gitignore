@@ -24,3 +24,4 @@ go.work
 build/*
 prctl.log*
 pool/*
+examples/deb-pool/*

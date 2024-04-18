@@ -1,7 +1,7 @@
 package debian
 
 import (
-	"github.com/baojingh/prctl/pkg/files"
+	"github.com/baojingh/prctl/internal/deb"
 	"github.com/spf13/cobra"
 )
 
@@ -10,17 +10,9 @@ var LogoutCmd = &cobra.Command{
 	Short: "logout the repo",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		path := "/home/ubuntu/.prctl/.config"
-		logout(path)
+		cli := deb.NewClientFromConfig()
+		if cli != nil {
+			cli.Logout()
+		}
 	},
-}
-
-func logout(path string) {
-	success := files.RemoveFileIfExist(path)
-	if success {
-		log.Infof("Remove cred file success, %s", path)
-	} else {
-		log.Debugf("Cred file not exists in %s", path)
-	}
-	log.Info("Logout success.")
 }

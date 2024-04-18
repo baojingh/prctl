@@ -1,8 +1,6 @@
 package deb
 
-import (
-	"github.com/baojingh/prctl/pkg/files"
-)
+import "github.com/baojingh/prctl/pkg/files"
 
 type DebComponentMeta struct {
 	Distribution string
@@ -10,8 +8,7 @@ type DebComponentMeta struct {
 	Architech    string
 }
 
-// input: /xx/xx/xx/, check is it exists
-func UploadDeb(meta DebComponentMeta, input string) {
+func (cli Client) Upload(meta DebComponentMeta, input string) {
 	// arch := meta.Architech
 	// dis := meta.Distribution
 	// com := meta.Component
@@ -32,10 +29,14 @@ func UploadDeb(meta DebComponentMeta, input string) {
 	// wg.Wait()
 }
 
+func (cli Client) List() {
+	// TODO
+}
+
 func doUpload(meta DebComponentMeta, path string, name string) {
-	credPath := "/root/.prctl/.config"
-	cred := ReadCred(credPath)
-	doRequst(meta, cred, path, name)
+	// credPath := "/root/.prctl/.config"
+	// cred := ReadCred(credPath)
+	// doRequst(meta, cred, path, name)
 
 	// file, _ := os.Open(absFilePath)
 	// defer file.Close()

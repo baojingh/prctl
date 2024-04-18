@@ -1,8 +1,9 @@
-package os
+package prsys
 
 import (
 	"bufio"
 	"os"
+	"os/user"
 	"strings"
 )
 
@@ -55,4 +56,10 @@ func GetOs() (OSInfo, error) {
 		return osInfo, err
 	}
 	return osInfo, nil
+}
+
+func CurrentUserPath() string {
+	currUser, _ := user.Current()
+	userPath := currUser.HomeDir
+	return userPath
 }

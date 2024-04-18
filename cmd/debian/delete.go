@@ -14,21 +14,17 @@ var DeleteCmd = &cobra.Command{
 	Short: "delete components in repo",
 	Run: func(cmd *cobra.Command, args []string) {
 		all, _ := cmd.Flags().GetBool("all")
-		name, _ := cmd.Flags().GetString("name")
-		version, _ := cmd.Flags().GetString("version")
 		param := deb.DeleteParam{
-			All:     all,
-			Name:    name,
-			Version: version,
+			All: all,
 		}
-		deb.DeleteDeb(param)
+		cli := deb.NewClientFromConfig()
+		if cli != nil {
+			cli.Delete(param)
+		}
 	},
 }
 
 func init() {
-	// TODO: delete components; delete component with version.
-	// Now: Implement delete all components at present.[20240413]
-	DownloadCmd.Flags().Bool("all", false, "Delete all components")
-	DownloadCmd.Flags().StringP("name", "n", "", "Components name")
-	DownloadCmd.Flags().StringP("version", "v", "", "Version")
+	DeleteCmd.Flags().Bool("all", false, "Delete all components")
+	DeleteCmd.MarkFlagRequired("all")
 }
