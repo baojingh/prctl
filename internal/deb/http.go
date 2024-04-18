@@ -1,5 +1,23 @@
 package deb
 
+import (
+	"net/http"
+	"sync"
+)
+
+var once sync.Once
+var client *http.Client
+
+func init() {
+	once.Do(func() {
+		client = &http.Client{}
+	})
+}
+
+func GetHttpClient() *http.Client {
+	return client
+}
+
 // import (
 // 	"bytes"
 // 	"fmt"

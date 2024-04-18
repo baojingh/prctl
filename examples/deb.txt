@@ -1,4 +1,3 @@
-cron
-gosu
-jq
-curl
+htop
+vim
+gedit

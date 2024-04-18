@@ -23,3 +23,8 @@ apt-get install --no-install-recommends -y --download-only cron
 
 # REF
 https://stackoverflow.com/questions/56133485/uploading-multiple-files-in-parallel-to-amazon-s3-with-goroutines-channels
+
+- golang change directory 
+  https://stackoverflow.com/questions/52435908/how-to-change-the-shells-current-working-directory-in-go
+
+  

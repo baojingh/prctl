@@ -2,11 +2,8 @@ package debian
 
 import (
 	"github.com/baojingh/prctl/internal/deb"
-	"github.com/baojingh/prctl/internal/logger"
 	"github.com/spf13/cobra"
 )
-
-var log = logger.New()
 
 var LoginCmd = &cobra.Command{
 	Use:   "login",

@@ -44,6 +44,7 @@ func (cli *Client) Download(input string, output string) {
 
 }
 
+// https://stackoverflow.com/questions/52435908/how-to-change-the-shells-current-working-directory-in-go
 // apt-get download just put the components in current path, so we need change to target dir
 func changeDirAndDo(nameList string, path string) {
 	cwd, _ := os.Getwd()

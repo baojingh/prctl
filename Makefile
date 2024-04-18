@@ -26,7 +26,7 @@ tidy:
 	go mod tidy
 
 deb-login:
-	./build/prctl login --url https://anc.com --repo myrepo --username bob --password password
+	./build/prctl login --url https://vsvsvs.com/pool --repo vsdvw  --username vs --password vsvs
 	ls -lh ~/.prctl
 	cat ~/.prctl/config
 	cat ~/.prctl/config | base64 -d
@@ -40,14 +40,9 @@ deb-down:
 	go run main.go  download  -i examples/deb.txt  -o examples/deb-pool
 	ls -lh examples/deb-pool
 
-	# ./build/prctl  download  -i examples/deb.txt  -o examples/deb-pool
-
-deb-ls:
-	ls -lh /var/cache/apt/archives/
-
 deb-upload:
-	./build/prctl  upload --architecture amd64 --component main --distribution bookworm \
-				  --input /data/code/goproject/prctl/examples/deb-pool/
+	go run main.go   upload --architecture amd64 --component main --distribution bionic \
+				  --input examples/deb-pool/
 
 deb-del:
 	echo "TODO"

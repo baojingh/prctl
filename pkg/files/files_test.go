@@ -43,3 +43,8 @@ func TestRemoveFileIfExist(t *testing.T) {
 	res := RemoveFileIfExist("/home/secur1ty/.prctl/ee")
 	fmt.Println(res)
 }
+
+func TestGetFileNameFromAbsPath(t *testing.T) {
+	name := GetFileNameFromAbsPath("/data/code/goproject/prctl/pkg/files/files_test.go")
+	fmt.Println(name)
+}

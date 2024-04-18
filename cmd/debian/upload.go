@@ -30,10 +30,10 @@ var UploadCmd = &cobra.Command{
 }
 
 func init() {
-	UploadCmd.Flags().String("distribution", "", "distribution")
-	UploadCmd.Flags().String("component", "", "component")
-	UploadCmd.Flags().String("architecture", "", "architecture")
-	UploadCmd.Flags().StringP("input", "i", "", "architecture")
+	UploadCmd.Flags().StringP("distribution", "d", "", "distribution")
+	UploadCmd.Flags().StringP("component", "c", "", "component")
+	UploadCmd.Flags().StringP("architecture", "a", "", "architecture")
+	UploadCmd.Flags().StringP("input", "i", "", "path to .deb")
 	UploadCmd.MarkFlagRequired("distribution")
 	UploadCmd.MarkFlagRequired("component")
 	UploadCmd.MarkFlagRequired("architecture")

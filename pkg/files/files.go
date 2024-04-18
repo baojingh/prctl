@@ -99,3 +99,8 @@ func MoveFilesBatch(src string, dst string, pattern string) error {
 	}
 	return nil
 }
+
+func GetFileNameFromAbsPath(path string) string {
+	filename := filepath.Base(path)
+	return filename
+}
