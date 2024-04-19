@@ -1,4 +1,4 @@
-package deb
+package cred
 
 import (
 	"encoding/base64"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/baojingh/prctl/internal/logger"
 	"github.com/baojingh/prctl/pkg/files"
-	prsys "github.com/baojingh/prctl/pkg/prsys"
+	"github.com/baojingh/prctl/pkg/prsys"
 )
 
 type Client struct {
@@ -23,7 +23,7 @@ type Client struct {
 var log = logger.New()
 
 // Write cred info when logining
-func WriteCred(url string, repo string, username string, password string) error {
+func Login(url string, repo string, username string, password string) error {
 	currUser, err := user.Current()
 	if err != nil {
 		log.Errorf("cannot get current user default path, %s", err)
@@ -61,38 +61,8 @@ func WriteCred(url string, repo string, username string, password string) error 
 	return nil
 }
 
-// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
-func getConfigPath() string {
-	userPath := prsys.CurrentUserPath()
-	hiddenPath := filepath.Join(userPath, ".prctl")
-	configPath := filepath.Join(hiddenPath, "config")
-	return configPath
-}
-
-// Create client from a cred file, apply in: logout,download, upload, delete
-func NewClientFromConfig() *Client {
-	configPath := getConfigPath()
-	content, err := os.ReadFile(configPath)
-	if err != nil {
-		log.Errorf("configPath %s not exist.", configPath)
-		return nil
-	}
-	var cli Client
-	decodeCred, err := base64.StdEncoding.DecodeString(string(content))
-	if err != nil {
-		log.Errorf("fail to decode, %s", err)
-		return nil
-	}
-	err = json.Unmarshal(decodeCred, &cli)
-	if err != nil {
-		log.Errorf("fail to unmarshal from decode data, %s", err)
-		return nil
-	}
-	return &cli
-}
-
-func (cli *Client) Logout() {
-	path := cli.ConfigPath
+func Logout() {
+	path := getConfigPath()
 	success := files.RemoveFileIfExist(path)
 	if success {
 		log.Infof("Remove cred file success, %s", path)
@@ -100,4 +70,12 @@ func (cli *Client) Logout() {
 		log.Debugf("Config file not exists in %s", path)
 	}
 	log.Info("Logout success.")
+}
+
+// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
+func getConfigPath() string {
+	userPath := prsys.CurrentUserPath()
+	hiddenPath := filepath.Join(userPath, ".prctl")
+	configPath := filepath.Join(hiddenPath, "config")
+	return configPath
 }

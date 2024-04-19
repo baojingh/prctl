@@ -3,7 +3,7 @@ package pypi
 import (
 	"os"
 
-	"github.com/baojingh/prctl/internal/pypi"
+	"github.com/baojingh/prctl/internal/factory"
 	"github.com/spf13/cobra"
 )
 
@@ -20,13 +20,14 @@ var DeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "delete components in repo",
 	Run: func(cmd *cobra.Command, args []string) {
-		all, _ := cmd.Flags().GetBool("all")
-		param := pypi.DeleteParam{
-			All: all,
-		}
-		cli := pypi.NewClientFromConfig()
+		// all, _ := cmd.Flags().GetBool("all")
+		// param := pypi.DeleteParam{
+		// 	All: all,
+		// }
+		parentType := cmd.Parent().Use
+		cli := factory.NewClientFactory(parentType)
 		if cli != nil {
-			cli.Delete(param)
+			cli.CreateClient().Delete("all")
 		}
 	},
 }
@@ -35,11 +36,12 @@ var DownloadCmd = &cobra.Command{
 	Use:   "download",
 	Short: "download files into local path",
 	Run: func(cmd *cobra.Command, args []string) {
-		input, _ := cmd.Flags().GetString("input")
-		output, _ := cmd.Flags().GetString("output")
-		cli := pypi.NewClientFromConfig()
+		// input, _ := cmd.Flags().GetString("input")
+		// output, _ := cmd.Flags().GetString("output")
+		parentType := cmd.Parent().Use
+		cli := factory.NewClientFactory(parentType)
 		if cli != nil {
-			cli.Download(input, output)
+			cli.CreateClient().Download("download")
 		}
 	},
 }
@@ -48,18 +50,19 @@ var UploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "upload components into repo",
 	Run: func(cmd *cobra.Command, args []string) {
-		distribution, _ := cmd.Flags().GetString("distribution")
-		component, _ := cmd.Flags().GetString("component")
-		input, _ := cmd.Flags().GetString("input")
-		architecture, _ := cmd.Flags().GetString("architecture")
-		meta := pypi.ComponentMeta{
-			Distribution: distribution,
-			Component:    component,
-			Architech:    architecture,
-		}
-		cli := pypi.NewClientFromConfig()
+		// distribution, _ := cmd.Flags().GetString("distribution")
+		// component, _ := cmd.Flags().GetString("component")
+		// input, _ := cmd.Flags().GetString("input")
+		// architecture, _ := cmd.Flags().GetString("architecture")
+		// meta := pypi.ComponentMeta{
+		// 	Distribution: distribution,
+		// 	Component:    component,
+		// 	Architech:    architecture,
+		// }
+		parentType := cmd.Parent().Use
+		cli := factory.NewClientFactory(parentType)
 		if cli != nil {
-			cli.Upload(meta, input)
+			cli.CreateClient().Upload("upload")
 		}
 	},
 }

@@ -25,24 +25,37 @@ clean:
 tidy:
 	go mod tidy
 
-deb-login:
+login:
 	./build/prctl login --url https://vsvsvs.com/pool --repo vsdvw  --username vs --password vsvs
 	ls -lh ~/.prctl
 	cat ~/.prctl/config
 	cat ~/.prctl/config | base64 -d
+	echo ""
 
-deb-logout:
+logout:
 	./build/prctl logout
 	ls -lh ~/.prctl
 
 deb-down:
 	sudo rm -rf examples/deb-pool
-	go run main.go  download  -i examples/deb.txt  -o examples/deb-pool
+	go run main.go deb download  -i examples/deb.txt  -o examples/deb-pool
 	ls -lh examples/deb-pool
 
 deb-upload:
-	go run main.go   upload --architecture amd64 --component main --distribution bionic \
+	go run main.go deb  upload --architecture amd64 --component main --distribution bionic \
 				  --input examples/deb-pool/
 
 deb-del:
-	echo "TODO"
+	go run main.go deb delete --all
+
+pypi-down:
+	sudo rm -rf examples/deb-pool
+	go run main.go pypi download  -i examples/deb.txt  -o examples/deb-pool
+	ls -lh examples/deb-pool
+
+pypi-upload:
+	go run main.go pypi  upload --architecture amd64 --component main --distribution bionic \
+				  --input examples/deb-pool/
+
+pypi-del:
+	go run main.go pypi delete --all
