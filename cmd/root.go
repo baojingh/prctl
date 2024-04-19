@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/baojingh/prctl/cmd/cred"
+	"github.com/baojingh/prctl/cmd/pypi"
 	"os"
 
 	"github.com/baojingh/prctl/cmd/debian"
@@ -25,9 +27,8 @@ var RootCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(debian.LoginCmd)
-	RootCmd.AddCommand(debian.LogoutCmd)
-	RootCmd.AddCommand(debian.DownloadCmd)
-	RootCmd.AddCommand(debian.UploadCmd)
-	RootCmd.AddCommand(debian.DeleteCmd)
+	RootCmd.AddCommand(cred.LoginCmd)
+	RootCmd.AddCommand(cred.LogoutCmd)
+	RootCmd.AddCommand(debian.DebianCommand)
+	RootCmd.AddCommand(pypi.PypiCommand)
 }
