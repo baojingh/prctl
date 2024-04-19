@@ -33,23 +33,34 @@ type Client struct {
 	ConfigPath string `json:"configPath"`
 }
 
-type DebClient struct {
-	handler.ClientOperations
+type DebRepoManage struct {
+	Client
 }
 
-type DebClientFactory struct{}
+func NewDebRepository() handler.RepoManage {
+	cli := CreateClient()
+	return &DebRepoManage{Client: *cli}
+}
 
 var log = logger.New()
 
+// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
+func getConfigPath() string {
+	userPath := prsys.CurrentUserPath()
+	hiddenPath := filepath.Join(userPath, ".prctl")
+	configPath := filepath.Join(hiddenPath, "config")
+	return configPath
+}
+
 // Create client from a cred file, apply in: logout,download, upload, delete
-func (j *DebClientFactory) CreateClient() handler.ClientOperations {
+func CreateClient() *Client {
 	configPath := getConfigPath()
 	content, err := os.ReadFile(configPath)
 	if err != nil {
 		log.Errorf("configPath %s not exist.", configPath)
 		return nil
 	}
-	var cli DebClient
+	var cli Client
 	decodeCred, err := base64.StdEncoding.DecodeString(string(content))
 	if err != nil {
 		log.Errorf("fail to decode, %s", err)
@@ -63,23 +74,15 @@ func (j *DebClientFactory) CreateClient() handler.ClientOperations {
 	return &cli
 }
 
-// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
-func getConfigPath() string {
-	userPath := prsys.CurrentUserPath()
-	hiddenPath := filepath.Join(userPath, ".prctl")
-	configPath := filepath.Join(hiddenPath, "config")
-	return configPath
+func (j *DebRepoManage) Delete(param string) {
+	log.Infof("debian delete all, %v, %v", param, j)
 }
 
-func (j *DebClient) Delete(param string) {
-	log.Infof("debian delete all, %v", param)
-}
-
-func (j *DebClient) Upload(param string) {
+func (j *DebRepoManage) Upload(param string) {
 	log.Infof("debian Upload all, %v", param)
 }
 
-func (j *DebClient) Download(param string) {
+func (j *DebRepoManage) Download(param string) {
 	log.Infof("debian Download all, %v", param)
 }
 

@@ -33,23 +33,34 @@ type Client struct {
 	ConfigPath string `json:"configPath"`
 }
 
-type PypiClient struct {
-	handler.ClientOperations
+type PypiRepoManage struct {
+	Client
 }
-
-type PypiClientFactory struct{}
 
 var log = logger.New()
 
+func NewPypiRepository() handler.RepoManage {
+	cli := CreateClient()
+	return &PypiRepoManage{Client: *cli}
+}
+
+// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
+func getConfigPath() string {
+	userPath := prsys.CurrentUserPath()
+	hiddenPath := filepath.Join(userPath, ".prctl")
+	configPath := filepath.Join(hiddenPath, "config")
+	return configPath
+}
+
 // Create client from a cred file, apply in: logout,download, upload, delete
-func (j *PypiClientFactory) CreateClient() handler.ClientOperations {
+func CreateClient() *Client {
 	configPath := getConfigPath()
 	content, err := os.ReadFile(configPath)
 	if err != nil {
 		log.Errorf("configPath %s not exist.", configPath)
 		return nil
 	}
-	var cli PypiClient
+	var cli Client
 	decodeCred, err := base64.StdEncoding.DecodeString(string(content))
 	if err != nil {
 		log.Errorf("fail to decode, %s", err)
@@ -63,16 +74,8 @@ func (j *PypiClientFactory) CreateClient() handler.ClientOperations {
 	return &cli
 }
 
-// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
-func getConfigPath() string {
-	userPath := prsys.CurrentUserPath()
-	hiddenPath := filepath.Join(userPath, ".prctl")
-	configPath := filepath.Join(hiddenPath, "config")
-	return configPath
-}
-
-func (cli *PypiClient) Delete(param string) {
-	log.Infof("delete all, %v", param)
+func (cli *PypiRepoManage) Delete(param string) {
+	log.Infof("pypi delete all, %v, %v", param, cli)
 
 	// if param.All {
 	// 	log.Infof("delete all, %v", param)
@@ -86,10 +89,10 @@ func (cli *PypiClient) Delete(param string) {
 
 // input: /xx/xx/xx/ss.txt, check is it exists
 // output aa/ss/ created if not exist
-func (cli *PypiClient) Download(param string) {
+func (cli *PypiRepoManage) Download(param string) {
 	log.Info("pypi download")
 }
 
-func (cli *PypiClient) Upload(param string) {
+func (cli *PypiRepoManage) Upload(param string) {
 	log.Infof("pypi upload")
 }

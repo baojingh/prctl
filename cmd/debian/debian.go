@@ -23,9 +23,9 @@ var DeleteCmd = &cobra.Command{
 		// all, _ := cmd.Flags().GetBool("all")
 
 		parentType := cmd.Parent().Use
-		cli := factory.NewClientFactory(parentType)
+		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.CreateClient().Delete("all")
+			cli.Delete("all")
 		}
 	},
 }
@@ -37,9 +37,9 @@ var DownloadCmd = &cobra.Command{
 		// input, _ := cmd.Flags().GetString("input")
 		// output, _ := cmd.Flags().GetString("output")
 		parentType := cmd.Parent().Use
-		cli := factory.NewClientFactory(parentType)
+		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.CreateClient().Download("download")
+			cli.Download("download")
 		}
 	},
 }
@@ -54,9 +54,9 @@ var UploadCmd = &cobra.Command{
 		// architecture, _ := cmd.Flags().GetString("architecture")
 
 		parentType := cmd.Parent().Use
-		cli := factory.NewClientFactory(parentType)
+		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.CreateClient().Upload("upload")
+			cli.Upload("upload")
 		}
 	},
 }

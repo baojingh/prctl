@@ -6,16 +6,12 @@ import (
 	"github.com/baojingh/prctl/internal/pypi"
 )
 
-type ClientFactory interface {
-	CreateClient() handler.ClientOperations
-}
-
-func NewClientFactory(clientType string) ClientFactory {
+func NewRepoManageFactory(clientType string) handler.RepoManage {
 	switch clientType {
 	case "pypi":
-		return &pypi.PypiClientFactory{}
+		return pypi.NewPypiRepository()
 	case "deb":
-		return &deb.DebClientFactory{}
+		return deb.NewDebRepository()
 	default:
 		return nil
 	}
