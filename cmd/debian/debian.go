@@ -1,12 +1,22 @@
-package common
+package debian
 
 import (
 	"fmt"
+	"github.com/baojingh/prctl/internal/handler"
+	"os"
 
 	"github.com/baojingh/prctl/internal/factory"
-	"github.com/baojingh/prctl/internal/handler"
 	"github.com/spf13/cobra"
 )
+
+var DebianCommand = &cobra.Command{
+	Use:   "deb",
+	Short: "Process deb component in repo",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+		os.Exit(1)
+	},
+}
 
 var DeleteCmd = &cobra.Command{
 	Use:   "delete",
@@ -78,4 +88,9 @@ func init() {
 	DownloadCmd.Flags().StringP("output", "o", "", "Components downloaded in to the directory")
 	DownloadCmd.MarkFlagRequired("input")
 	DownloadCmd.MarkFlagRequired("output")
+
+	DebianCommand.AddCommand(DownloadCmd)
+	DebianCommand.AddCommand(UploadCmd)
+	DebianCommand.AddCommand(DeleteCmd)
+
 }
