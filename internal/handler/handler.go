@@ -23,7 +23,7 @@ type Client struct {
 }
 
 type RepoManage interface {
-	Delete(param string)
+	Delete(param DeleteParam)
 	Download(input string, output string)
-	Upload(param string)
+	Upload(meta ComponentMeta, input string)
 }

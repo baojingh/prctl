@@ -2,6 +2,7 @@ package common
 
 import (
 	"github.com/baojingh/prctl/internal/factory"
+	"github.com/baojingh/prctl/internal/handler"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,7 @@ var DeleteCmd = &cobra.Command{
 		parentType := cmd.Parent().Use
 		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.Delete("all")
+			cli.Delete(handler.DeleteParam{})
 		}
 	},
 }
@@ -28,7 +29,7 @@ var DownloadCmd = &cobra.Command{
 		parentType := cmd.Parent().Use
 		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.Download("download")
+			cli.Download("inpit", "output")
 		}
 	},
 }
@@ -45,7 +46,7 @@ var UploadCmd = &cobra.Command{
 		parentType := cmd.Parent().Use
 		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.Upload("upload")
+			cli.Upload(handler.ComponentMeta{}, "input")
 		}
 	},
 }
