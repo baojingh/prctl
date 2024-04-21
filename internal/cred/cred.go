@@ -79,25 +79,3 @@ func getConfigPath() string {
 	configPath := filepath.Join(hiddenPath, "config")
 	return configPath
 }
-
-// Create client from a cred file, apply in: logout,download, upload, delete
-func CreateClient() *Client {
-	configPath := getConfigPath()
-	content, err := os.ReadFile(configPath)
-	if err != nil {
-		log.Errorf("configPath %s not exist.", configPath)
-		return nil
-	}
-	var cli Client
-	decodeCred, err := base64.StdEncoding.DecodeString(string(content))
-	if err != nil {
-		log.Errorf("fail to decode, %s", err)
-		return nil
-	}
-	err = json.Unmarshal(decodeCred, &cli)
-	if err != nil {
-		log.Errorf("fail to unmarshal from decode data, %s", err)
-		return nil
-	}
-	return &cli
-}
