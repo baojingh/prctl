@@ -38,24 +38,24 @@ logout:
 
 deb-down:
 	sudo rm -rf examples/deb-pool
-	go run main.go deb download  -i examples/deb.txt  -o examples/deb-pool
+	./build/prctl deb download  -i examples/deb.txt  -o examples/deb-pool
 	ls -lh examples/deb-pool
 
 deb-upload:
-	go run main.go deb  upload --architecture amd64 --component main --distribution bionic \
+	./build/prctl deb  upload --architecture amd64 --component main --distribution bionic \
 				  --input examples/deb-pool/
 
 deb-del:
-	go run main.go deb delete --all
+	./build/prctl deb delete --all
 
 pypi-down:
 	sudo rm -rf examples/deb-pool
-	go run main.go pypi download  -i examples/deb.txt  -o examples/deb-pool
+	./build/prctl pypi download  -i examples/deb.txt  -o examples/deb-pool
 	ls -lh examples/deb-pool
 
 pypi-upload:
-	go run main.go pypi  upload --architecture amd64 --component main --distribution bionic \
+	./build/prctl pypi  upload --architecture amd64 --component main --distribution bionic \
 				  --input examples/deb-pool/
 
 pypi-del:
-	go run main.go pypi delete --all
+	./build/prctl pypi delete --all

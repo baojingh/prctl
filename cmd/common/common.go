@@ -1,6 +1,8 @@
 package common
 
 import (
+	"fmt"
+
 	"github.com/baojingh/prctl/internal/factory"
 	"github.com/baojingh/prctl/internal/handler"
 	"github.com/spf13/cobra"
@@ -10,12 +12,13 @@ var DeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "delete components in repo",
 	Run: func(cmd *cobra.Command, args []string) {
-		// all, _ := cmd.Flags().GetBool("all")
+		all, _ := cmd.Flags().GetBool("all")
 
 		parentType := cmd.Parent().Use
 		cli := factory.NewRepoManageFactory(parentType)
+		fmt.Printf("######%s#%v#%s#", parentType, all, cli)
 		if cli != nil {
-			cli.Delete(handler.DeleteParam{})
+			cli.Delete(handler.DeleteParam{All: all})
 		}
 	},
 }
@@ -24,12 +27,12 @@ var DownloadCmd = &cobra.Command{
 	Use:   "download",
 	Short: "download files into local path",
 	Run: func(cmd *cobra.Command, args []string) {
-		// input, _ := cmd.Flags().GetString("input")
-		// output, _ := cmd.Flags().GetString("output")
+		input, _ := cmd.Flags().GetString("input")
+		output, _ := cmd.Flags().GetString("output")
 		parentType := cmd.Parent().Use
 		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.Download("inpit", "output")
+			cli.Download(input, output)
 		}
 	},
 }
@@ -38,15 +41,21 @@ var UploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "upload components into repo",
 	Run: func(cmd *cobra.Command, args []string) {
-		// distribution, _ := cmd.Flags().GetString("distribution")
-		// component, _ := cmd.Flags().GetString("component")
-		// input, _ := cmd.Flags().GetString("input")
-		// architecture, _ := cmd.Flags().GetString("architecture")
+		distribution, _ := cmd.Flags().GetString("distribution")
+		component, _ := cmd.Flags().GetString("component")
+		input, _ := cmd.Flags().GetString("input")
+		architecture, _ := cmd.Flags().GetString("architecture")
 
 		parentType := cmd.Parent().Use
 		cli := factory.NewRepoManageFactory(parentType)
 		if cli != nil {
-			cli.Upload(handler.ComponentMeta{}, "input")
+			cli.Upload(
+				handler.ComponentMeta{
+					Distribution: distribution,
+					Component:    component,
+					Architech:    architecture,
+				},
+				input)
 		}
 	},
 }
