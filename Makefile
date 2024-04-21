@@ -26,7 +26,7 @@ tidy:
 	go mod tidy
 
 login:
-	./build/prctl login --url https://vsvsvs.com/pool --repo vsdvw  --username vs --password vsvs
+	./build/prctl login --url https://jfrog.com/pool --repo repo  --username bob --password 123456
 	ls -lh ~/.prctl
 	cat ~/.prctl/config
 	cat ~/.prctl/config | base64 -d
