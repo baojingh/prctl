@@ -25,3 +25,5 @@ build/*
 prctl.log*
 pool/*
 examples/deb-pool/*
+
+.idea
