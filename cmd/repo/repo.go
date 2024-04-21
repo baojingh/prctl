@@ -1,6 +1,9 @@
-package cred
+package repo
 
 import (
+	"os"
+
+	"github.com/baojingh/prctl/cmd/common"
 	"github.com/baojingh/prctl/internal/cred"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +30,35 @@ var LogoutCmd = &cobra.Command{
 	},
 }
 
+var DebianCommand = &cobra.Command{
+	Use:   "deb",
+	Short: "Process deb component in repo",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+		os.Exit(1)
+	},
+}
+
+var PypiCommand = &cobra.Command{
+	Use:   "pypi",
+	Short: "Process pypi component in python repo",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+		os.Exit(1)
+	},
+}
+
+var GoCommand = &cobra.Command{
+	Use:   "go",
+	Short: "Process go component in go repo",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+		os.Exit(1)
+	},
+}
+
 func init() {
+
 	LoginCmd.Flags().String("url", "", "URL of the repository")
 	LoginCmd.Flags().String("repo", "", "name of the repository")
 	LoginCmd.Flags().StringP("username", "u", "", "Username for login")
@@ -38,4 +69,17 @@ func init() {
 	LoginCmd.MarkFlagRequired("repo")
 	LoginCmd.MarkFlagRequired("username")
 	LoginCmd.MarkFlagRequired("password")
+
+	PypiCommand.AddCommand(common.DownloadCmd)
+	PypiCommand.AddCommand(common.UploadCmd)
+	PypiCommand.AddCommand(common.DeleteCmd)
+
+	DebianCommand.AddCommand(common.DownloadCmd)
+	DebianCommand.AddCommand(common.UploadCmd)
+	DebianCommand.AddCommand(common.DeleteCmd)
+
+	GoCommand.AddCommand(common.DownloadCmd)
+	GoCommand.AddCommand(common.UploadCmd)
+	GoCommand.AddCommand(common.DeleteCmd)
+
 }

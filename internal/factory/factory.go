@@ -12,6 +12,8 @@ func NewRepoManageFactory(clientType string) handler.RepoManage {
 		return pypi.NewPypiRepository()
 	case "deb":
 		return deb.NewDebRepository()
+	case "go":
+		return nil
 	default:
 		return nil
 	}

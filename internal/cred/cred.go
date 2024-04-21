@@ -7,9 +7,9 @@ import (
 	"os/user"
 	"path/filepath"
 
+	"github.com/baojingh/prctl/internal/common"
 	"github.com/baojingh/prctl/internal/logger"
 	"github.com/baojingh/prctl/pkg/files"
-	"github.com/baojingh/prctl/pkg/prsys"
 )
 
 type Client struct {
@@ -62,7 +62,7 @@ func Login(url string, repo string, username string, password string) error {
 }
 
 func Logout() {
-	path := getConfigPath()
+	path := common.GetConfigPath()
 	success := files.RemoveFileIfExist(path)
 	if success {
 		log.Infof("Remove cred file success, %s", path)
@@ -70,12 +70,4 @@ func Logout() {
 		log.Debugf("Config file not exists in %s", path)
 	}
 	log.Info("Logout success.")
-}
-
-// get cred path, default os /home/${USER}/.prctl/config or /root/.prctl/config
-func getConfigPath() string {
-	userPath := prsys.CurrentUserPath()
-	hiddenPath := filepath.Join(userPath, ".prctl")
-	configPath := filepath.Join(hiddenPath, "config")
-	return configPath
 }

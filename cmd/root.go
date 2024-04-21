@@ -2,11 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/baojingh/prctl/cmd/cred"
-	"github.com/baojingh/prctl/cmd/pypi"
 	"os"
 
-	"github.com/baojingh/prctl/cmd/debian"
+	"github.com/baojingh/prctl/cmd/repo"
+
 	"github.com/spf13/cobra"
 )
 
@@ -27,8 +26,10 @@ var RootCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(cred.LoginCmd)
-	RootCmd.AddCommand(cred.LogoutCmd)
-	RootCmd.AddCommand(debian.DebianCommand)
-	RootCmd.AddCommand(pypi.PypiCommand)
+	RootCmd.AddCommand(repo.LoginCmd)
+	RootCmd.AddCommand(repo.LogoutCmd)
+
+	RootCmd.AddCommand(repo.DebianCommand)
+	RootCmd.AddCommand(repo.PypiCommand)
+	RootCmd.AddCommand(repo.GoCommand)
 }
