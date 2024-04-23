@@ -84,10 +84,6 @@ func CreateUploadCmd() *cobra.Command {
 	return cmd
 }
 
-func init() {
-
-}
-
 func CreateLoginCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
