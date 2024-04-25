@@ -14,6 +14,7 @@ import (
 	"github.com/baojingh/prctl/internal/logger"
 	"github.com/baojingh/prctl/pkg/files"
 	"github.com/baojingh/prctl/pkg/grpool"
+	"github.com/baojingh/prctl/pkg/prhttp"
 	"github.com/baojingh/prctl/pkg/shell"
 )
 
@@ -138,13 +139,17 @@ func (cli *DebRepoManage) doUpload(meta handler.ComponentMeta, path string, file
 	req.Header.Set("Content-Type", "application/octet-stream")
 	req.SetBasicAuth(cli.Username, cli.Password)
 
-	// // Do request
-	// resp, err := prhttp.DoHttpRequest(req)
-	// if err != nil {
-	// 	log.Error(err)
-	// 	return
-	// }
-	// defer resp.Body.Close()
+	// Do request
+	resp, err := prhttp.DoHttpRequest(req)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer resp.Body.Close()
 
 	log.Infof("HTTP upload Success Status")
+}
+
+func (cli *DebRepoManage) List() []handler.ComponentView {
+	return nil
 }

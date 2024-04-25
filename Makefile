@@ -59,3 +59,6 @@ pypi-upload:
 
 pypi-del:
 	./build/prctl pypi delete --all
+
+pypi-del:
+	./build/prctl pypi list

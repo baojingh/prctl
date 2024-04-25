@@ -22,8 +22,15 @@ type Client struct {
 	ConfigPath string `json:"configPath"`
 }
 
+type ComponentView struct {
+	Name    string
+	Version string
+	Time    string
+}
+
 type RepoManage interface {
 	Delete(param DeleteParam)
 	Download(input string, output string)
 	Upload(meta ComponentMeta, input string)
+	List() []ComponentView
 }
