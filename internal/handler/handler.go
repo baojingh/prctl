@@ -23,9 +23,11 @@ type Client struct {
 }
 
 type ComponentView struct {
-	Name    string
-	Version string
-	Time    string
+	Name     string
+	Version  string
+	Path     string
+	FileName string
+	Time     string
 }
 
 type RepoManage interface {

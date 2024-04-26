@@ -26,7 +26,8 @@ tidy:
 	go mod tidy
 
 login:
-	./build/prctl login --url https://jfrog.com/pool --repo repo  --username bob --password 123456
+	# ./build/prctl login --url https://jfrog.com/pool --repo repo  --username bob --password 123456
+	./build/prctl login --url https://xs.rtf-alm.xs.cloud --repo xsypi-awsl  --username xs --password xs
 	ls -lh ~/.prctl
 	cat ~/.prctl/config
 	cat ~/.prctl/config | base64 -d
@@ -60,5 +61,5 @@ pypi-upload:
 pypi-del:
 	./build/prctl pypi delete --all
 
-pypi-del:
-	./build/prctl pypi list
+pypi-list:
+	./build/prctl pypi list --all

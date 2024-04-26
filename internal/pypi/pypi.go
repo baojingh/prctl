@@ -1,8 +1,12 @@
 package pypi
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/baojingh/prctl/internal/common"
 	"github.com/baojingh/prctl/internal/handler"
@@ -22,6 +26,26 @@ func NewPypiRepository() handler.RepoManage {
 }
 
 func (cli *PypiRepoManage) Delete(param handler.DeleteParam) {
+	metaArr := cli.List()
+
+	for _, ele := range metaArr {
+		// Create request object
+		url := fmt.Sprintf("%s/artifactory/%s/%s", cli.RepoUrl, cli.RepoName, ele.Name)
+
+		req, err := http.NewRequest("DELETE", url, nil)
+		if err != nil {
+			log.Errorf("Create request err, %s", err)
+			return
+		}
+
+		// Set username and password
+		req.Header.Set("Content-Type", "text/plain")
+		req.SetBasicAuth(cli.Username, cli.Password)
+
+		// Do request
+		prhttp.DoHttpRequest(req)
+	}
+
 }
 
 // input: /xx/xx/xx/ss.txt, check is it exists
@@ -35,35 +59,64 @@ func (cli *PypiRepoManage) Upload(meta handler.ComponentMeta, input string) {
 }
 
 func (cli *PypiRepoManage) List() []handler.ComponentView {
-	url := "https://falcon.rtf-alm.siemens.cloud:443/artifactory/xo_cys-dev-pypi-awsl?list"
 	// Create request object
-	req, err := http.NewRequest("GET", url, nil)
+	url := fmt.Sprintf("%s/%s", cli.RepoUrl, "artifactory/api/search/aql")
+
+	reqB := fmt.Sprintf(`items.find({"repo":"%s"})`, cli.RepoName)
+	requestBody := bytes.NewBufferString(reqB)
+
+	req, err := http.NewRequest("POST", url, requestBody)
 	if err != nil {
-		log.Error(err)
+		log.Errorf("Create request err, %s", err)
 		return nil
 	}
 
 	// Set username and password
-	req.Header.Set("Content-Type", "application/octet-stream")
-	req.SetBasicAuth("dd", "dd")
+	req.Header.Set("Content-Type", "text/plain")
+	req.SetBasicAuth(cli.Username, cli.Password)
 
 	// Do request
 	resp, err := prhttp.DoHttpRequest(req)
 	if err != nil {
-		log.Error(err)
+		log.Errorf("fail to send req, %s", err)
 		return nil
 	}
 	defer resp.Body.Close()
 
 	bodyBytes, _ := io.ReadAll(resp.Body)
-	log.Infof("%v", bodyBytes)
 
-	// // 将字节切片解码为struct对象
-	// var myStruct MyStruct
-	// _ = json.Unmarshal(bodyBytes, &myStruct)
+	type FileInfo struct {
+		Repo       string `json:"repo"`
+		Path       string `json:"path"`
+		Name       string `json:"name"`
+		Type       string `json:"type"`
+		Size       int    `json:"size"`
+		Created    string `json:"created"`
+		CreatedBy  string `json:"created_by"`
+		Modified   string `json:"modified"`
+		ModifiedBy string `json:"modified_by"`
+		Updated    string `json:"updated"`
+	}
 
-	// // 打印struct对象的内容
-	// log.Infof("Field1: %s, Field2: %d\n", myStruct.Field1, myStruct.Field2)
+	var result struct {
+		Results []FileInfo `json:"results"`
+	}
 
-	return nil
+	metaArr := []handler.ComponentView{}
+
+	// 解析JSON字符串
+	json.Unmarshal(bodyBytes, &result)
+	// 遍历结果并打印文件名
+	for _, file := range result.Results {
+		fmt.Printf("%s %s\n", file.Path, file.Name)
+
+		mata := handler.ComponentView{
+			Name:     strings.Split(file.Path, "/")[0],
+			Version:  strings.Split(file.Path, "/")[1],
+			FileName: file.Name,
+			Path:     file.Path,
+		}
+		metaArr = append(metaArr, mata)
+	}
+	return metaArr
 }

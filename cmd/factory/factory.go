@@ -122,3 +122,24 @@ func CreateLogioutmd() *cobra.Command {
 	}
 	return cmd
 }
+
+func CreateListCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list",
+		Short: "logout the repo",
+		Long:  ``,
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Flags().GetBool("all")
+			parentType := cmd.Parent().Use
+			cli := factory.NewRepoManageFactory(parentType)
+			if cli != nil {
+				cli.List()
+			}
+		},
+	}
+
+	cmd.Flags().Bool("all", false, "List all components")
+	cmd.MarkFlagRequired("all")
+
+	return cmd
+}
