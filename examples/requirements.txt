@@ -1,0 +1,4 @@
+PyYAML==6.0
+requests==2.28.2
+pyOpenSSL==24.0.0
+PyJWT==2.8.0

@@ -9,6 +9,7 @@ import (
 var once sync.Once
 var client *http.Client
 
+// Note: timeout when upload files with large size.
 func init() {
 	once.Do(func() {
 		transport := &http.Transport{
@@ -17,7 +18,7 @@ func init() {
 		}
 
 		client = &http.Client{
-			Timeout:   time.Second * 10,
+			Timeout:   time.Second * 50,
 			Transport: transport,
 		}
 	})

@@ -12,5 +12,9 @@ func TestShellCmd(t *testing.T) {
 		return
 	}
 	fmt.Printf("success %s", string(out))
+}
 
+func TestIsCmdExist(t *testing.T) {
+	res := IsCmdExist("ls")
+	fmt.Println(res)
 }

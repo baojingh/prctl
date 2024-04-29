@@ -77,10 +77,10 @@ func CreateUploadCmd() *cobra.Command {
 	cmd.Flags().StringP("component", "c", "", "component")
 	cmd.Flags().StringP("architecture", "a", "", "architecture")
 	cmd.Flags().StringP("input", "i", "", "path to .deb")
-	cmd.MarkFlagRequired("distribution")
-	cmd.MarkFlagRequired("component")
-	cmd.MarkFlagRequired("architecture")
-	cmd.MarkFlagRequired("input")
+	// cmd.MarkFlagRequired("distribution")
+	// cmd.MarkFlagRequired("component")
+	// cmd.MarkFlagRequired("architecture")
+	// cmd.MarkFlagRequired("input")
 	return cmd
 }
 
