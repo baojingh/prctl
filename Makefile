@@ -27,7 +27,7 @@ tidy:
 
 login:
 	# ./build/prctl login --url https://jfrog.com/pool --repo repo  --username bob --password 123456
-	./build/prctl login --url https://xx.rtf-alm.xx.cloud --repo xx-cs-pypi-awsl  --username bf --password xx
+	./build/prctl login --url https://cds.rtf-alm.cs.cloud --repo cs-dev-pypi-awsl  --username fe --password cds
 	ls -lh ~/.prctl
 	cat ~/.prctl/config
 	cat ~/.prctl/config | base64 -d

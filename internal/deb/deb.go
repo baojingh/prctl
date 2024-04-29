@@ -2,10 +2,14 @@ package deb
 
 import (
 	"bufio"
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -116,8 +120,9 @@ func (cli *DebRepoManage) doUpload(meta handler.ComponentMeta, path string, file
 	arch := meta.Architech
 	dis := meta.Distribution
 	com := meta.Component
-	uploadUrl := fmt.Sprintf("%s/%s;deb.distribution=%s;deb.component=%s;deb.architecture=%s",
-		cli.RepoUrl, fileName, dis, com, arch)
+
+	uploadUrl := fmt.Sprintf("%s/artifactory/%s/pool/%s;deb.distribution=%s;deb.component=%s;deb.architecture=%s",
+		cli.RepoUrl, cli.RepoName, fileName, dis, com, arch)
 
 	// Open the file
 	filePath := filepath.Join(path, fileName)
@@ -150,6 +155,72 @@ func (cli *DebRepoManage) doUpload(meta handler.ComponentMeta, path string, file
 	log.Infof("HTTP upload Success Status")
 }
 
+// curl  -u fds:fs  -XGET https://fa.rtf-alm.
+// fsa.cloud/artifactory/api/storage/fa-dev-debian-awsl/pool?list
 func (cli *DebRepoManage) List() []handler.ComponentView {
-	return nil
+	// Create request object
+	url := fmt.Sprintf("%s/%s", cli.RepoUrl, "artifactory/api/search/aql")
+
+	reqB := fmt.Sprintf(`items.find({"repo":"%s"})`, cli.RepoName)
+	requestBody := bytes.NewBufferString(reqB)
+
+	req, err := http.NewRequest("POST", url, requestBody)
+	if err != nil {
+		log.Errorf("Create request err, %s", err)
+		return nil
+	}
+
+	// Set username and password
+	req.Header.Set("Content-Type", "text/plain")
+	req.SetBasicAuth(cli.Username, cli.Password)
+
+	// Do request
+	resp, err := prhttp.DoHttpRequest(req)
+	if err != nil {
+		log.Errorf("fail to send req, %s", err)
+		return nil
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, _ := io.ReadAll(resp.Body)
+
+	type FileInfo struct {
+		Repo       string `json:"repo"`
+		Path       string `json:"path"`
+		Name       string `json:"name"`
+		Type       string `json:"type"`
+		Size       int    `json:"size"`
+		Created    string `json:"created"`
+		CreatedBy  string `json:"created_by"`
+		Modified   string `json:"modified"`
+		ModifiedBy string `json:"modified_by"`
+		Updated    string `json:"updated"`
+	}
+
+	var result struct {
+		Results []FileInfo `json:"results"`
+	}
+
+	metaArr := []handler.ComponentView{}
+
+	// 解析JSON字符串
+	json.Unmarshal(bodyBytes, &result)
+	re := regexp.MustCompile("^.pypi.*")
+
+	// 遍历结果并打印文件名
+	for _, file := range result.Results {
+		if re.MatchString(file.Path) {
+			continue
+		}
+		fmt.Printf("%s %s\n", file.Path, file.Name)
+
+		mata := handler.ComponentView{
+			Name:     strings.Split(file.Path, "/")[0],
+			Version:  strings.Split(file.Path, "/")[1],
+			FileName: file.Name,
+			Path:     file.Path,
+		}
+		metaArr = append(metaArr, mata)
+	}
+	return metaArr
 }
