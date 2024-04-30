@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"sync"
 
@@ -33,8 +32,34 @@ func NewDebRepository() handler.RepoManage {
 
 var log = logger.New()
 
-func (j *DebRepoManage) Delete(param handler.DeleteParam) {
-	log.Infof("debian delete all, %v, %v", param, j)
+// curl  -u vvv:vvv  -X DELETE https://vs.rtf-alm.vd.cloud/artifactory/vs-dev-debian-awsl/pool
+func (cli *DebRepoManage) Delete(param handler.DeleteParam) {
+	metaArr := []handler.ComponentView{
+		{
+			Name: ".dists",
+		},
+		{
+			Name: "pool",
+		},
+	}
+	for _, ele := range metaArr {
+		// Create request object
+		name := strings.Split(ele.Name, "-")[0]
+		url := fmt.Sprintf("%s/artifactory/%s/%s", cli.RepoUrl, cli.RepoName, name)
+
+		req, err := http.NewRequest("DELETE", url, nil)
+		if err != nil {
+			log.Errorf("Create request err, %s", err)
+			return
+		}
+
+		// Set username and password
+		req.Header.Set("Content-Type", "text/plain")
+		req.SetBasicAuth(cli.Username, cli.Password)
+
+		// Do request
+		prhttp.DoHttpRequest(req)
+	}
 }
 
 // input: /xx/xx/xx/ss.txt, check is it exists
@@ -67,29 +92,21 @@ func (cli *DebRepoManage) Download(input string, output string) {
 		return
 	}
 	res := strings.TrimSpace(buffer.String())
-	changeDirAndDo(res, output)
+	doDownload(res)
+	files.MoveFilesBatch("/var/cache/apt/archives/", output, "deb")
 	log.Info("Deb components are downloaded success.")
 }
 
 // https://stackoverflow.com/questions/52435908/how-to-change-the-shells-current-working-directory-in-go
 // apt-get download just put the components in current path, so we need change to target dir
-func changeDirAndDo(nameList string, path string) {
-	cwd, _ := os.Getwd()
-	if err := os.Chdir(path); err != nil {
-		return
-	}
+func doDownload(nameList string) {
 	// component name list must be seperated and then composed by append.
-	params := []string{"download"}
+	params := []string{"install", "--no-install-recommends", "-y", "--download-only"}
 	params = append(params, strings.Fields(nameList)...)
 	log.Infof("Command: apt-get %s", strings.Join(params, " "))
 	out, err := shell.DoShellCmd("apt-get", params...)
 	if err != nil {
 		log.Errorf("failed to download %s, err: %s, out: %s", nameList, err, out)
-		return
-	}
-	log.Infof("Download %s success.", nameList)
-
-	if err := os.Chdir(cwd); err != nil {
 		return
 	}
 }
@@ -152,7 +169,7 @@ func (cli *DebRepoManage) doUpload(meta handler.ComponentMeta, path string, file
 	}
 	defer resp.Body.Close()
 
-	log.Infof("HTTP upload Success Status")
+	log.Infof("HTTP upload Success")
 }
 
 // curl  -u fds:fs  -XGET https://fa.rtf-alm.
@@ -161,7 +178,7 @@ func (cli *DebRepoManage) List() []handler.ComponentView {
 	// Create request object
 	url := fmt.Sprintf("%s/%s", cli.RepoUrl, "artifactory/api/search/aql")
 
-	reqB := fmt.Sprintf(`items.find({"repo":"%s"})`, cli.RepoName)
+	reqB := fmt.Sprintf(`items.find({"repo":"%s", "name":{"$match":"*.deb"}})`, cli.RepoName)
 	requestBody := bytes.NewBufferString(reqB)
 
 	req, err := http.NewRequest("POST", url, requestBody)
@@ -205,18 +222,12 @@ func (cli *DebRepoManage) List() []handler.ComponentView {
 
 	// 解析JSON字符串
 	json.Unmarshal(bodyBytes, &result)
-	re := regexp.MustCompile("^.pypi.*")
 
 	// 遍历结果并打印文件名
 	for _, file := range result.Results {
-		if re.MatchString(file.Path) {
-			continue
-		}
-		fmt.Printf("%s %s\n", file.Path, file.Name)
-
 		mata := handler.ComponentView{
-			Name:     strings.Split(file.Path, "/")[0],
-			Version:  strings.Split(file.Path, "/")[1],
+			Name:     strings.Split(file.Name, "_")[0],
+			Version:  strings.Split(file.Name, "_")[1],
 			FileName: file.Name,
 			Path:     file.Path,
 		}

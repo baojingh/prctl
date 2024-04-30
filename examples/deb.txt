@@ -1,3 +1,2 @@
-htop
-vim
+gosu
 gedit

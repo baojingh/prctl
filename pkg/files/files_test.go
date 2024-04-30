@@ -48,3 +48,7 @@ func TestGetFileNameFromAbsPath(t *testing.T) {
 	name := GetFileNameFromAbsPath("/data/code/goproject/prctl/pkg/files/files_test.go")
 	fmt.Println(name)
 }
+
+func TestMoveFilesBatch(t *testing.T) {
+	// MoveFilesBatch(input, output, "deb")
+}

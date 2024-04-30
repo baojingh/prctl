@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"sync"
 
@@ -34,8 +33,11 @@ func NewPypiRepository() handler.RepoManage {
 
 // curl  -u cs:cds  -X DELETE https://cs.rtf-alm.cs.cloud/artifactory/cs-dev-pypi-awsl/PyYAML
 func (cli *PypiRepoManage) Delete(param handler.DeleteParam) {
-	metaArr := cli.List()
-
+	var metaArr []handler.ComponentView = cli.List()
+	delItem := handler.ComponentView{
+		Name: ".pypi",
+	}
+	metaArr = append(metaArr, delItem)
 	for _, ele := range metaArr {
 		// Create request object
 		name := strings.Split(ele.Name, "-")[0]
@@ -54,21 +56,6 @@ func (cli *PypiRepoManage) Delete(param handler.DeleteParam) {
 		// Do request
 		prhttp.DoHttpRequest(req)
 	}
-	url := fmt.Sprintf("%s/artifactory/%s/%s", cli.RepoUrl, cli.RepoName, ".pypi")
-
-	req, err := http.NewRequest("DELETE", url, nil)
-	if err != nil {
-		log.Errorf("Create request err, %s", err)
-		return
-	}
-
-	// Set username and password
-	req.Header.Set("Content-Type", "text/plain")
-	req.SetBasicAuth(cli.Username, cli.Password)
-
-	// Do request
-	prhttp.DoHttpRequest(req)
-
 }
 
 // input: /xx/xx/xx/ss.txt, check is it exists
@@ -150,7 +137,7 @@ func (cli *PypiRepoManage) List() []handler.ComponentView {
 	// Create request object
 	url := fmt.Sprintf("%s/%s", cli.RepoUrl, "artifactory/api/search/aql")
 
-	reqB := fmt.Sprintf(`items.find({"repo":"%s"})`, cli.RepoName)
+	reqB := fmt.Sprintf(`items.find({"repo":"%s", "name":{"$match":"*.whl"}})`, cli.RepoName)
 	requestBody := bytes.NewBufferString(reqB)
 
 	req, err := http.NewRequest("POST", url, requestBody)
@@ -194,13 +181,9 @@ func (cli *PypiRepoManage) List() []handler.ComponentView {
 
 	// 解析JSON字符串
 	json.Unmarshal(bodyBytes, &result)
-	re := regexp.MustCompile("^.pypi.*")
 
 	// 遍历结果并打印文件名
 	for _, file := range result.Results {
-		if re.MatchString(file.Path) {
-			continue
-		}
 		fmt.Printf("%s %s\n", file.Path, file.Name)
 
 		mata := handler.ComponentView{
