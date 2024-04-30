@@ -13,12 +13,12 @@ var client *http.Client
 func init() {
 	once.Do(func() {
 		transport := &http.Transport{
-			MaxIdleConnsPerHost: 10,
-			IdleConnTimeout:     5,
+			MaxIdleConnsPerHost: 60,
+			IdleConnTimeout:     60,
 		}
 
 		client = &http.Client{
-			Timeout:   time.Second * 50,
+			Timeout:   time.Second * 60,
 			Transport: transport,
 		}
 	})

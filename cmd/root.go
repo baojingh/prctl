@@ -31,4 +31,5 @@ func init() {
 
 	RootCmd.AddCommand(repo.DebianCommand)
 	RootCmd.AddCommand(repo.PypiCommand)
+	RootCmd.AddCommand(repo.GoCommand)
 }

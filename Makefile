@@ -27,7 +27,7 @@ tidy:
 
 login:
 	# ./build/prctl login --url https://jfrog.com/pool --repo repo  --username bob --password 123456
-	./build/prctl login --url https://vd.rtf-alm.vd.cloud --repo vd-dev-debian-awsl  --username vd --password vd
+	./build/prctl login --url https://ff.rtf-alm.ff.cloud --repo ff-dev-go-ff  --username ee --password fd
 	ls -lh ~/.prctl
 	cat ~/.prctl/config
 	cat ~/.prctl/config | base64 -d
@@ -65,3 +65,19 @@ pypi-del:
 
 pypi-list:
 	./build/prctl pypi list --all
+
+
+go-down:
+	sudo rm -rf examples/go-pool
+	./build/prctl go download  -i examples/  -o examples/go-pool
+	ls -lh examples/go-pool
+
+go-upload:
+	./build/prctl go  upload --input examples/go-pool/
+
+go-del:
+	./build/prctl go delete --all
+
+go-list:
+	./build/prctl go list --all
+

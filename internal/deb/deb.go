@@ -36,7 +36,7 @@ var log = logger.New()
 func (cli *DebRepoManage) Delete(param handler.DeleteParam) {
 	metaArr := []handler.ComponentView{
 		{
-			Name: ".dists",
+			Name: "dists",
 		},
 		{
 			Name: "pool",
@@ -199,7 +199,11 @@ func (cli *DebRepoManage) List() []handler.ComponentView {
 	}
 	defer resp.Body.Close()
 
-	bodyBytes, _ := io.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("fail to readall from resp, %v", err)
+		return nil
+	}
 
 	type FileInfo struct {
 		Repo       string `json:"repo"`
@@ -232,6 +236,7 @@ func (cli *DebRepoManage) List() []handler.ComponentView {
 			Path:     file.Path,
 		}
 		metaArr = append(metaArr, mata)
+		fmt.Printf("%s\n", file.Name)
 	}
 	return metaArr
 }

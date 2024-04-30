@@ -28,6 +28,15 @@ var PypiCommand = &cobra.Command{
 	},
 }
 
+var GoCommand = &cobra.Command{
+	Use:   "go",
+	Short: "Process go component in go repo",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+		os.Exit(1)
+	},
+}
+
 func DebCmd() {
 	DeleteCmd := factory.CreateDeleteCmd()
 	DownloadCmd := factory.CreateDownloadCmd()
@@ -51,7 +60,19 @@ func PypiCmd() {
 	PypiCommand.AddCommand(ListCmd)
 }
 
+func GoCmd() {
+	DeleteCmd := factory.CreateDeleteCmd()
+	DownloadCmd := factory.CreateDownloadCmd()
+	UploadCmd := factory.CreateUploadCmd()
+	ListCmd := factory.CreateListCmd()
+	GoCommand.AddCommand(DownloadCmd)
+	GoCommand.AddCommand(UploadCmd)
+	GoCommand.AddCommand(DeleteCmd)
+	GoCommand.AddCommand(ListCmd)
+}
+
 func init() {
 	PypiCmd()
 	DebCmd()
+	GoCmd()
 }

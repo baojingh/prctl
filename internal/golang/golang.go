@@ -1,4 +1,4 @@
-package pypi
+package golang
 
 import (
 	"bytes"
@@ -20,53 +20,43 @@ import (
 	"github.com/baojingh/prctl/pkg/shell"
 )
 
-type PypiRepoManage struct {
+type GoRepoManage struct {
 	handler.Client
 }
 
 var log = logger.New()
 
-func NewPypiRepository() handler.RepoManage {
+func NewGoRepository() handler.RepoManage {
 	cli := common.CreateClient()
-	return &PypiRepoManage{Client: *cli}
+	return &GoRepoManage{Client: *cli}
 }
 
-// curl  -u cs:cds  -X DELETE https://cs.rtf-alm.cs.cloud/artifactory/cs-dev-pypi-awsl/PyYAML
-func (cli *PypiRepoManage) Delete(param handler.DeleteParam) {
-	var metaArr []handler.ComponentView = cli.List()
-	delItem := handler.ComponentView{
-		Name: ".pypi",
+// curl  -u ee:ee  -X DELETE https://rr.rtf-alm.ee.cloud/artifactory/ee-dev-go-ee/pool
+func (cli *GoRepoManage) Delete(param handler.DeleteParam) {
+	// Create request object
+	url := fmt.Sprintf("%s/artifactory/%s/%s", cli.RepoUrl, cli.RepoName, "pool")
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		log.Errorf("Create request err, %s", err)
+		return
 	}
-	metaArr = append(metaArr, delItem)
-	for _, ele := range metaArr {
-		// Create request object
-		name := strings.Split(ele.Name, "-")[0]
-		url := fmt.Sprintf("%s/artifactory/%s/%s", cli.RepoUrl, cli.RepoName, name)
+	// Set username and password
+	req.Header.Set("Content-Type", "text/plain")
+	req.SetBasicAuth(cli.Username, cli.Password)
 
-		req, err := http.NewRequest("DELETE", url, nil)
-		if err != nil {
-			log.Errorf("Create request err, %s", err)
-			return
-		}
-
-		// Set username and password
-		req.Header.Set("Content-Type", "text/plain")
-		req.SetBasicAuth(cli.Username, cli.Password)
-
-		// Do request
-		resp, err := prhttp.DoHttpRequest(req)
-		if err != nil {
-			log.Errorf("fail to send req, %s", err)
-			return
-		}
-		defer resp.Body.Close()
-		log.Infof("delete success %s, status: %d", name, resp.StatusCode)
+	// Do request
+	resp, err := prhttp.DoHttpRequest(req)
+	if err != nil {
+		log.Errorf("fail to send req, %s", err)
+		return
 	}
+	defer resp.Body.Close()
+	log.Infof("delete success, status: %d", resp.StatusCode)
 }
 
 // input: /xx/xx/xx/ss.txt, check is it exists
 // output aa/ss/ created  by pip command automatically
-func (cli *PypiRepoManage) Download(input string, output string) {
+func (cli *GoRepoManage) Download(input string, output string) {
 	// pip download -d sample/vcas/vca  --only-binary=:all:  -r ./requirements.txt
 	params := []string{"download", "-d", output, "--only-binary=:all: ", "-r", input}
 	log.Infof("Command: pip %s", strings.Join(params, " "))
@@ -78,7 +68,7 @@ func (cli *PypiRepoManage) Download(input string, output string) {
 	log.Info("Download Pypi success.")
 }
 
-func (cli *PypiRepoManage) Upload(meta handler.ComponentMeta, input string) {
+func (cli *GoRepoManage) Upload(meta handler.ComponentMeta, input string) {
 	log.Infof("start upload, input path %s", input)
 	var wg sync.WaitGroup
 
@@ -100,7 +90,7 @@ func (cli *PypiRepoManage) Upload(meta handler.ComponentMeta, input string) {
 //	     -XPUT  \
 //	    "${URL}/flask/3.0.3/flafmvsni_vnsi7823_u9r32.whl" \
 //	    -T "${file}"
-func (cli *PypiRepoManage) doUpload(path string, fileName string) {
+func (cli *GoRepoManage) doUpload(path string, fileName string) {
 
 	name := strings.Split(fileName, "-")[0]
 	version := strings.Split(fileName, "-")[1]
@@ -139,11 +129,11 @@ func (cli *PypiRepoManage) doUpload(path string, fileName string) {
 	log.Infof("HTTP upload Success Status")
 }
 
-func (cli *PypiRepoManage) List() []handler.ComponentView {
+func (cli *GoRepoManage) List() []handler.ComponentView {
 	// Create request object
 	url := fmt.Sprintf("%s/%s", cli.RepoUrl, "artifactory/api/search/aql")
 
-	reqB := fmt.Sprintf(`items.find({"repo":"%s", "name":{"$match":"*.whl"}})`, cli.RepoName)
+	reqB := fmt.Sprintf(`items.find({"repo":"%s", "name":{"$match":"*.mod"}})`, cli.RepoName)
 	requestBody := bytes.NewBufferString(reqB)
 
 	req, err := http.NewRequest("POST", url, requestBody)
@@ -190,13 +180,10 @@ func (cli *PypiRepoManage) List() []handler.ComponentView {
 
 	// 遍历结果并打印文件名
 	for _, file := range result.Results {
-		fmt.Printf("%s %s\n", file.Path, file.Name)
+		fmt.Printf("%s\n", file.Path)
 
 		mata := handler.ComponentView{
-			Name:     strings.Split(file.Path, "/")[0],
-			Version:  strings.Split(file.Path, "/")[1],
-			FileName: file.Name,
-			Path:     file.Path,
+			Path: file.Path,
 		}
 		metaArr = append(metaArr, mata)
 	}
