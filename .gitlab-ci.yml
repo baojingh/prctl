@@ -1,0 +1,41 @@
+stages:
+  - pre-build
+  - build
+  - pre-test
+  - test
+
+
+
+repo-debian:
+  stage: test
+  image:
+    name: debian:12
+    entrypoint: [""]
+  script:
+    - |-
+      ls
+      date
+
+
+repo-ubuntu:
+  stage: test
+  image:
+    name: ubuntu:18
+    entrypoint: [""]
+  script:
+    - |-
+      ls
+      date
+
+
+repo-golang:
+  stage: test
+  image:
+    name: golang:1.21
+    entrypoint: [""]
+  script:
+    - |-
+      ls
+      date
+
+
