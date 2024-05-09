@@ -40,7 +40,15 @@ var GoCommand = &cobra.Command{
 func DebCmd() {
 	DeleteCmd := factory.CreateDeleteCmd()
 	DownloadCmd := factory.CreateDownloadCmd()
+
 	UploadCmd := factory.CreateUploadCmd()
+	UploadCmd.Flags().StringP("distribution", "d", "", "distribution")
+	UploadCmd.Flags().StringP("component", "c", "", "component")
+	UploadCmd.Flags().StringP("architecture", "a", "", "architecture")
+	UploadCmd.MarkFlagRequired("distribution")
+	UploadCmd.MarkFlagRequired("component")
+	UploadCmd.MarkFlagRequired("architecture")
+
 	ListCmd := factory.CreateListCmd()
 
 	DebianCommand.AddCommand(DownloadCmd)

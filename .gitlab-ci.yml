@@ -4,38 +4,39 @@ stages:
   - pre-test
   - test
 
-
-
-repo-debian:
-  stage: test
-  image:
-    name: debian:12
-    entrypoint: [""]
-  script:
-    - |-
-      ls
-      date
-
-
-repo-ubuntu:
-  stage: test
-  image:
-    name: ubuntu:18
-    entrypoint: [""]
-  script:
-    - |-
-      ls
-      date
-
-
 repo-golang:
   stage: test
   image:
-    name: golang:1.21
+    name: golang:1.19
     entrypoint: [""]
   script:
     - |-
       ls
       date
+
+
+# repo-debian:
+#   stage: test
+#   image:
+#     name: debian:12
+#     entrypoint: [""]
+#   script:
+#     - |-
+#       ls
+#       date
+
+
+# repo-ubuntu:
+#   stage: test
+#   image:
+#     name: ubuntu:18
+#     entrypoint: [""]
+#   script:
+#     - |-
+#       ls
+#       date
+
+
+
 
 
