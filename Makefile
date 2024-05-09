@@ -13,7 +13,7 @@ push-hub:
 	git push origin main || true
 
 
-push-sie:
+push:
 	git  remote set-url origin git@code.siemens.com:baojing.he/prctl.git
 	git pull
 	git add . || true
