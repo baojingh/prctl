@@ -77,9 +77,11 @@ pypi-list:
 
 
 go-down:
+	go clean -modcache
+	ls -lh /home/secur1ty/go/pkg
 	sudo rm -rf examples/go-pool
 	./build/prctl go download  -i examples/  -o examples/go-pool
-	ls -lh examples/go-pool
+	ls -lh /home/secur1ty/go/pkg
 
 go-upload:
 	./build/prctl go  upload --input examples/go-pool/

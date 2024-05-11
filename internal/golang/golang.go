@@ -56,6 +56,11 @@ func (cli *GoRepoManage) Delete(param handler.DeleteParam) {
 // input: /xx/xx/xx/ss.txt, check is it exists
 // output aa/ss/ created  by pip command automatically
 func (cli *GoRepoManage) Download(input string, output string) {
+	cwd, _ := os.Getwd()
+	if err := os.Chdir(input); err != nil {
+		return
+	}
+
 	// go mod download
 	params := []string{"mod", "download"}
 	log.Infof("Command: go %s", strings.Join(params, " "))
@@ -65,6 +70,12 @@ func (cli *GoRepoManage) Download(input string, output string) {
 		return
 	}
 	log.Info("Download success.")
+
+	// https://stackoverflow.com/questions/52435908/how-to-change-the-shells-current-working-directory-in-go
+	// apt-get download just put the components in current path, so we need change to target dir
+	if err := os.Chdir(cwd); err != nil {
+		return
+	}
 }
 
 func (cli *GoRepoManage) Upload(meta handler.ComponentMeta, input string) {
