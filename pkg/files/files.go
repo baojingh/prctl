@@ -104,3 +104,7 @@ func GetFileNameFromAbsPath(path string) string {
 	filename := filepath.Base(path)
 	return filename
 }
+
+func CompressTarGz(path string) {
+
+}

@@ -57,15 +57,15 @@ func (cli *GoRepoManage) Delete(param handler.DeleteParam) {
 // input: /xx/xx/xx/ss.txt, check is it exists
 // output aa/ss/ created  by pip command automatically
 func (cli *GoRepoManage) Download(input string, output string) {
-	// pip download -d sample/vcas/vca  --only-binary=:all:  -r ./requirements.txt
+	// go mod download
 	params := []string{"mod", "download"}
-	log.Infof("Command: pip %s", strings.Join(params, " "))
+	log.Infof("Command: go %s", strings.Join(params, " "))
 	out, err := shell.DoShellCmd("go", params...)
 	if err != nil {
-		log.Errorf("failed to download Pypi Components, err: %v", out)
+		log.Errorf("failed to download Components, err: %v", out)
 		return
 	}
-	log.Info("Download Pypi success.")
+	log.Info("Download success.")
 }
 
 func (cli *GoRepoManage) Upload(meta handler.ComponentMeta, input string) {
