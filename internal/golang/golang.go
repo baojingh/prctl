@@ -58,9 +58,9 @@ func (cli *GoRepoManage) Delete(param handler.DeleteParam) {
 // output aa/ss/ created  by pip command automatically
 func (cli *GoRepoManage) Download(input string, output string) {
 	// pip download -d sample/vcas/vca  --only-binary=:all:  -r ./requirements.txt
-	params := []string{"download", "-d", output, "--only-binary=:all: ", "-r", input}
+	params := []string{"mod", "download"}
 	log.Infof("Command: pip %s", strings.Join(params, " "))
-	out, err := shell.DoShellCmd("pip", params...)
+	out, err := shell.DoShellCmd("go", params...)
 	if err != nil {
 		log.Errorf("failed to download Pypi Components, err: %v", out)
 		return

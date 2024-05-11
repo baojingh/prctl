@@ -41,6 +41,8 @@ func DebCmd() {
 	DeleteCmd := factory.CreateDeleteCmd()
 	DownloadCmd := factory.CreateDownloadCmd()
 
+	// the 3 params are needed for debian upload
+	// Not for pypi or golang
 	UploadCmd := factory.CreateUploadCmd()
 	UploadCmd.Flags().StringP("distribution", "d", "", "distribution")
 	UploadCmd.Flags().StringP("component", "c", "", "component")
