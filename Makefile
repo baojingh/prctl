@@ -78,13 +78,14 @@ pypi-list:
 
 go-down:
 	go clean -modcache
-	ls -lh /home/secur1ty/go/pkg
-	sudo rm -rf examples/go-pool
+	# ls -lh /home/${USER}/go/pkg
+	# ll /root/go/pkg/mod
+	# sudo rm -rf examples/go-pool
 	./build/prctl go download  -i examples/  -o examples/go-pool
-	ls -lh /home/secur1ty/go/pkg
+	# ls -lh /home/${USER}/go/pkg
 
 go-upload:
-	./build/prctl go  upload --input examples/go-pool/
+	./build/prctl go  upload --input /root/go/pkg/mod/cache/
 
 go-del:
 	./build/prctl go delete --all

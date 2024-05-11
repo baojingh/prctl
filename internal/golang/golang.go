@@ -15,7 +15,6 @@ import (
 	"github.com/baojingh/prctl/internal/logger"
 	"github.com/baojingh/prctl/pkg/files"
 	"github.com/baojingh/prctl/pkg/prhttp"
-	"github.com/baojingh/prctl/pkg/prsys"
 	"github.com/baojingh/prctl/pkg/shell"
 )
 
@@ -81,14 +80,17 @@ func (cli *GoRepoManage) Download(input string, output string) {
 func (cli *GoRepoManage) Upload(meta handler.ComponentMeta, input string) {
 	log.Infof("start upload, input path %s", input)
 
-	path := prsys.GetGoInfo("GOMODCACHE")
-	cachePath := filepath.Join(path, "cache")
-	srcPath := filepath.Join(path, "cache/download")
-	dstPath := filepath.Join(path, "cache/pool")
+	// envCachePath := prsys.GetGoInfo("GOMODCACHE")
+	envCachePath := "/home/ubuntu/go/pkg/mod"
+	cachePath := filepath.Join(envCachePath, "cache")
+	srcPath := filepath.Join(envCachePath, "cache/download")
+	dstPath := filepath.Join(envCachePath, "cache/pool")
+	log.Infof("envCachePath: %s, cache:%s", envCachePath, cachePath)
+	log.Infof("src: %s, dst: %s", srcPath, dstPath)
 	files.RenameDir(srcPath, dstPath)
 	files.CompressTarGz(cachePath, "pool", "pool.tar.gz")
 
-	// cli.doUpload(input, fileName)
+	// cli.doUpload(input, "pool.tar.gz")
 }
 
 //	curl -u${USER}:${TOKEN} \

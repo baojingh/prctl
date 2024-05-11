@@ -19,6 +19,6 @@ func TestCurrentUserPath(t *testing.T) {
 }
 
 func TestGetGoInfo(t *testing.T) {
-	res := GetGoInfo("GOMODCACHE")
+	res := GetGoInfo("GOMODCACHE2")
 	fmt.Println(res)
 }
