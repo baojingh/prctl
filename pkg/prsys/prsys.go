@@ -63,3 +63,8 @@ func CurrentUserPath() string {
 	userPath := currUser.HomeDir
 	return userPath
 }
+
+func GetGoInfo(key string) string {
+	val := os.Getenv(key)
+	return val
+}

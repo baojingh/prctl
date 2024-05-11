@@ -26,5 +26,6 @@ prctl.log*
 pool/*
 examples/deb-pool/*
 examples/pypi-pool/*
+examples/*/*.tar.gz
 
 .idea

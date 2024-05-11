@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/walle/targz"
 )
 
 func CreateDirIfNotExist(path string, perm os.FileMode) error {
@@ -105,6 +107,20 @@ func GetFileNameFromAbsPath(path string) string {
 	return filename
 }
 
-func CompressTarGz(path string) {
+// /a/b/c/d.txt
+// target: compress c dir
+// path: /a/b
+// dirname: c
+// ALL path must be absilute path, not relative path
+func CompressTarGz(path string, dirName string, pkgName string) error {
+	desPath := filepath.Join(path, dirName)
+	err := targz.Compress(desPath, filepath.Join(path, pkgName))
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
+func RenameDir(src string, dst string) {
+	os.Rename(src, dst)
 }

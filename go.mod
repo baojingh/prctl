@@ -7,6 +7,7 @@ require (
 	github.com/panjf2000/ants/v2 v2.9.1
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.8.0
+	github.com/walle/targz v0.0.0-20140417120357-57fe4206da5a
 )
 
 require (

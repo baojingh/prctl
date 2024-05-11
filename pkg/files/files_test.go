@@ -48,3 +48,7 @@ func TestGetFileNameFromAbsPath(t *testing.T) {
 	name := GetFileNameFromAbsPath("/data/code/goproject/prctl/pkg/files/files_test.go")
 	fmt.Println(name)
 }
+
+func TestCompressTarGz(t *testing.T) {
+	CompressTarGz("/data/code/goproject/prctl/examples/parent-path", "pool", "cdcd.tar.gz")
+}

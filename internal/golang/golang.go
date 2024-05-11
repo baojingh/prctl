@@ -9,14 +9,13 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/baojingh/prctl/internal/common"
 	"github.com/baojingh/prctl/internal/handler"
 	"github.com/baojingh/prctl/internal/logger"
 	"github.com/baojingh/prctl/pkg/files"
-	"github.com/baojingh/prctl/pkg/grpool"
 	"github.com/baojingh/prctl/pkg/prhttp"
+	"github.com/baojingh/prctl/pkg/prsys"
 	"github.com/baojingh/prctl/pkg/shell"
 )
 
@@ -70,20 +69,15 @@ func (cli *GoRepoManage) Download(input string, output string) {
 
 func (cli *GoRepoManage) Upload(meta handler.ComponentMeta, input string) {
 	log.Infof("start upload, input path %s", input)
-	var wg sync.WaitGroup
 
-	fileList, _ := files.ListFilesInDir(input)
-	for _, file := range fileList {
-		fileName := file
-		wg.Add(1)
-		f := func() {
-			defer wg.Done()
-			cli.doUpload(input, fileName)
-		}
-		grpool.SubmitTask(f)
-	}
-	// NOTE: Do Not Forget it.
-	wg.Wait()
+	path := prsys.GetGoInfo("GOMODCACHE")
+	cachePath := filepath.Join(path, "cache")
+	srcPath := filepath.Join(path, "cache/download")
+	dstPath := filepath.Join(path, "cache/pool")
+	files.RenameDir(srcPath, dstPath)
+	files.CompressTarGz(cachePath, "pool", "pool.tar.gz")
+
+	// cli.doUpload(input, fileName)
 }
 
 //	curl -u${USER}:${TOKEN} \
